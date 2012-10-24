@@ -1,0 +1,100 @@
+/*
+File: gaya.css
+Fungsi: Style Untuk Tampilan
+Auth: ShowCheap
+Site: http://www.sucipto.net
+*/
+body{
+    background: url(gambar/bg.png);
+}
+input#in-siswa[type='text']{
+    border: 2px hidden;
+    border-color: black;
+}
+input[type='text'],input[type="password"]{
+    border: 1px solid;
+}
+#inner{
+    padding: 4px;
+}
+#pinjem{
+    border-color: yellow;
+    border: 1px groove;
+    padding: 4px;
+    background-color: silver;
+}
+#panel{
+    background-color: #3399FF;
+   
+    color: #000;
+    direction: ltr;
+    font: 13px/28px sans-serif;
+    height: 30px;
+    left: 0;
+    min-width: 600px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 99999;
+    padding: 5px;
+}
+#badan{
+    margin: 31px auto;
+    margin-top: 50px;
+    width: 1000px;
+    border: 1px solid;
+    padding: 10px;
+    border-color: lightblue;
+    font-family: arial;
+    font-size: 13px;
+    background: #ffffff;
+}
+#tbl_buku{
+    border: 1px solid;
+    border-color: lightblue;
+    width: 100%;
+}
+#copyright{
+    font-style: italic;
+    color: gray;
+    font-size: 11px;
+}
+#genap{
+    background-color: #CCFF66;
+}
+#ganjil{
+    background-color: #FFFF99;
+}
+.cari{
+    color: purple;
+    background-color: orange;
+}
+
+a.list,a.list:hover{
+    text-decoration: none;
+    color: black;
+}
+#navigasi{
+    background-color: #FF6633;
+    padding: 5px;
+    margin-top: 10px;
+}
+#genap:hover, #ganjil:hover, #belum:hover, #sudah:hover{
+    background-color: #66e5ff;
+}
+#belum{
+    background-color: #FF6633;
+}
+#sudah{
+    background-color: #CCFF33;
+}
+
+#copyright{
+    z-index: 9999;
+    position: fixed;
+    top: 97%;
+}
+#copyright:hover{
+    font-weight: bold;
+    color: green;
+}
