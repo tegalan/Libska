@@ -1,0 +1,10 @@
+$("#pinjam-buku").submit(function(){
+        $.ajax({
+            url:'ajax/do-pinjam.php',
+            type:'POST',
+            data:$(this).serialize(),
+            success:function(data){
+                $("#content").html(data);
+            }
+        })
+    })

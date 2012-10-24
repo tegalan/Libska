@@ -31,6 +31,7 @@ $buku=$_GET["buku"];
 $siswa=new siswa();
 $buku=new buku();
 $buku->setKode($_GET["buku"]);
+echo $_POST["coba"];
 ?>
 
 <script type="text/javascript">
@@ -45,8 +46,9 @@ $buku->setKode($_GET["buku"]);
             })
         })
 </script>
+
 <div id="content">
-<form name="siswa" onsubmit="return false" id="frm-siswa">
+<form name="form-siswa" onsubmit="return false" id="frm-siswa">
     <input type="text" name="siswa" placeholder="Masukkan No Anggota" style="width: 85%;" value="<?php echo $_POST["siswa"];  ?>">
     <input type="submit" value="Cari" class="btn btn-primary" style="margin-top: -10px;">
 </form>
@@ -66,9 +68,13 @@ if($_POST["siswa"]){
         <td>Kelas /  Jurusan</td><td>:</td><td><?php echo $siswa->getKelas()." ".$siswa->getJurusan(); ?></td>
     </tr> 
 </table>
-<?php }else{ ?>
+<?php
+$siswa_ada=true;
+}else{ ?>
 <div class="alert alert-error">No Anggota tidak di temukan, silahkan di check kembali</div>
-<?php } ?>
+<?php
+$siswa_ada=false;
+} ?>
 <h4>Buku</h4>
 <table cellpadding="3" class="well" width="100%">
 <tr>
@@ -81,5 +87,20 @@ if($_POST["siswa"]){
     <td>Pengarang</td><td>:</td><td><?php echo $buku->getPengarang(); ?></td>
 </tr>
 </table>
-<?php }; //end if $_POST["siswa"] ?>
+<h4>Periode</h4>
+<div class="well">
+    <?php echo "<b>".sekarang()."</b> Sampai <b>".$kembali."</b>"; ?>
 </div>
+<?php
+if($siswa_ada){
+?>
+<script type="text/javascript" src="./ajax/send.js"></script>
+<form id="pinjam-buku" name="form-pinjam" onsubmit="return false" >
+    <input type="text" name="peminjam">
+    <input type="submit" value="Pinjam" class="btn">
+</form>
+<?
+}
+?>
+<?php }; //end if $_POST["siswa"] ?>
+</div><!--div content-->

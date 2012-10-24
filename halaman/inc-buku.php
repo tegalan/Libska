@@ -48,12 +48,12 @@ $jhal=ceil($jumlah/$bts);
   }
 </script>
 <!--modal popup peminjaman-->
-<div class="modal hide fade" id="pop-pinjam" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal hide fade" id="pop-pinjam" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="margin-top: -290px;">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true" >x</button>
     <h3>Peminjaman</h3>
   </div>
-  <div class="modal-body">
+  <div class="modal-body" style="max-height: 500px;">
   <a href="#" class="btn" data-dismiss="modal">Close</a>
     <a href="#" class="btn btn-primary">Save changes</a>
     <p>Memuat Data..</p>
