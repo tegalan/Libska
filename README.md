@@ -1,0 +1,4 @@
+Libska
+======
+
+Simple Library Administration
