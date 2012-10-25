@@ -26,7 +26,7 @@
         ?>
     </select>
     <input type='hidden' name='stat' value=''>
-    <input type='submit' value='OK'>
+    <input type='submit' value='OK' class="btn btn-primary" style="margin-top:-8px">
 </form>
 <div style='margin: auto;'><img src='grafik/tahun.php?thn=<?php echo $_GET['thn'] ?>'></div>
 <br><br>
@@ -151,5 +151,5 @@
         <option value='log'>Catatan Log</option>
     </select>
     <input type='hidden' value='dwn' name='mode'>
-    <input type='submit' value='Download' disabled='disabled' name='submiter'>
+    <input type='submit' value='Download' disabled='disabled' name='submiter' class="btn btn-success" style="margin-top:-8px">
 </form>

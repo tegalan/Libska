@@ -41,7 +41,9 @@ $semua=mysql_query("select * from buku");
 $semua=mysql_num_rows($semua);
 $jumlah=mysql_num_rows($a);
 $jhal=ceil($jumlah/$bts);
+
 ?>
+
 <script type='text/javascript'>
   function kirim(){
     document.forms['frm-buku'].submit();
@@ -159,7 +161,13 @@ sambung();
 $a=mysql_query("select * from buku where $where like '%$key%' && status like '$stat' order by $order ASC limit $mulai, $bts");
 $no=1;
 $chek=mysql_num_rows($a);
-
+if($chek==1){
+  ?>
+  <script type="text/javascript">
+    $('#tmbl-pinjam').trigger('click');
+  </script>
+  <?php
+}
 while ($m=mysql_fetch_array($a)){
     
     if($chek=='1' && $m['status'] != 'Kosong'){
@@ -171,12 +179,6 @@ while ($m=mysql_fetch_array($a)){
     //}   
     //</script>";
 ?>
-<script type='text/javascript'>
-  $(document).ready(function(){
-    $(".aj-pinjm<?php echo $m['no']; ?>").toggle();
-  })
-  
-</script>
 <?php
 }
 
@@ -212,7 +214,7 @@ echo "<tr>";
     ?>
                 <div class="btn-group">
 		    <?php if($m['status']=='Ada'){ ?>
-                    <button class="btn btn-success tmbl-pinjam" data-toggle="modal" href="ajax/ajax-pinjam.php?buku=<?php echo $m['kd_buku'] ?>" data-target="#pop-pinjam" >Pinjam</button>
+                    <button id="tmbl-pinjam" class="btn btn-success tmbl-pinjam" data-toggle="modal" href="ajax/ajax-pinjam.php?buku=<?php echo $m['kd_buku'] ?>" data-target="#pop-pinjam" >Pinjam</button>
 		    <?php }else{ ?>
 		    <button class="btn btn-danger tmbl-pinjam" data-toggle="modal" data-target="#pop-nopinjam">Pinjam</button>
 		    <?php } ?>
@@ -221,24 +223,13 @@ echo "<tr>";
                     </button>
                     <ul class="dropdown-menu">
                         <li><a href='buku.php?tambah=1&hapus=1&buku=<?php echo $m['kd_buku'] ?>' title='Hapus Buku' onclick='return confirm("Yakin Hapus Buku Ini?");'>Hapus</a></li>
-                        <li><a tabindex="-1" target="_blank" href="http://facebook.com/sharer.php?u=http://localhost/download.php?produk=7">Bagikan</a></li>
+                        <li><a href='buku.php?tambah=1&tBuku=<?php echo $m['kd_buku']; ?>' title='Tambah Buku Sejenis' onclick='return confirm(\"Tambah Buku?\");'>Tambah</a></li>
                     </ul>
               </div>
     <?php
     echo "</td>";
 echo "</tr>";
-echo "<tr><td colspan='6' class='aj-pinjm".$m['no']." pinjam'>"; ?>
-
-<? echo "</td></tr>";
 ?>
-<script type='text/javascript'>
-
-  $(document).ready(function(){
-    $(".jud<?php echo $m['no']; ?>").click(function(){
-      $(".aj-pinjm<?php echo $m['no']; ?>").toggle();
-    })
-  })
-</script>
 <?php
 $no++;
 }

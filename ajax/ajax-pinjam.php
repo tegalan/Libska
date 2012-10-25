@@ -83,7 +83,7 @@ if($_GET["mode"]=="pinjam"){
 
 <div id="content">
 <form name="form-siswa" onsubmit="return false" id="frm-siswa">
-    <input type="text" name="siswa" placeholder="Masukkan No Anggota" style="width: 85%;" value="<?php echo $_POST["siswa"];  ?>">
+    <input id="cari-siswa" type="text" name="siswa" placeholder="Masukkan No Anggota" style="width: 85%;" value="<?php echo $_POST["siswa"];  ?>">
     <input type="submit" value="Cari" class="btn btn-primary" style="margin-top: -10px;">
 </form>
 <?php
@@ -129,6 +129,7 @@ $siswa_ada=false;
 if($siswa_ada){
 ?>
 <script type="text/javascript">
+    $('#tmbl-pinjam').focus();
     $('#tmbl-pinjam').click(function(){
         $.ajax({
                 url:'ajax/ajax-pinjam.php?mode=pinjam&buku=<?php echo $_GET["buku"] ?>&siswa=<?php echo $siswa->getInduk(); ?>&kembali=<?php echo $kembali; ?>',
@@ -139,9 +140,17 @@ if($siswa_ada){
             })
     })
 </script>
-<a href="#" class="btn btn-primary" id="tmbl-pinjam">Pinjam</a> <a class="btn" href="#">Batal</a>
+<a href="#" class="btn btn-primary" id="tmbl-pinjam">Pinjam</a> <a class="btn" href="#" data-dismiss="modal" aria-hidden="true">Batal</a>
 <?
 }
 ?>
-<?php }; //end if $_POST["siswa"] ?>
+<?php }else{ ?>
+<script type='text/javascript'>
+    $("#pop-pinjam").on('shown',function(){
+        $('input[name="siswa"]').focus();
+    })
+    
+</script>
+<?php
+}; //end if $_POST["siswa"] ?>
 </div><!--div content-->

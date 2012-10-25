@@ -36,23 +36,24 @@ $log->sql("select * from log order by id ASC limit 0, $lihat");
     }
 </style>
 <h2>Log / Aktivitas</h2>
-<table cellpadding='2' cellspacing='0' width='100%' style='border: 1px solid; padding: 2px;'>
+<table cellpadding='2' cellspacing='0' width='100%' class="table table-striped table-hover">
+<thead>
     <tr style='font-weight: bold; '>
-        <td width='150' style="border: 1px solid; margin: 0;">User</td>
-        <td style="border: 1px solid; margin: 0;">Tindakan / Aktivitas</td>
-        <td width='150' style="border: 1px solid; margin: 0;">Waktu</td>
+        <td width='150' ">User</td>
+        <td ">Tindakan / Aktivitas</td>
+        <td width='150' ">Waktu</td>
     </tr>
-
+</thead>
 <?php
 while($log->hasil()){
     echo "<tr id='rec'>";
-    echo "<td style='border-bottom: 1px solid blue'>".$log->hasil['user']."</td>";
-    echo "<td style='border-bottom: 1px solid blue'>".$log->hasil['aksi']."</td>";
-    echo "<td style='border-bottom: 1px solid blue'>".$log->hasil['tgl']."</td>";
-    echo "</tr style='border-bottom: 1px solid blue'>";
+    echo "<td>".$log->hasil['user']."</td>";
+    echo "<td>".$log->hasil['aksi']."</td>";
+    echo "<td>".$log->hasil['tgl']."</td>";
+    echo "</tr>";
 }
-echo "<tr><td colspan='3'><button onclick='window.location=\"log.php?item=".$tambah."#bawah\"'>Lihat Lebih Banyak</button>";
-echo admin("<button onclick='reset()'>Kosongkan Log Aktivitas</button></td></tr>");
+echo "<tr><td colspan='3' style=\"padding: 3px\"><button class='btn btn-success' onclick='window.location=\"log.php?item=".$tambah."#bawah\"'>Lihat Lebih Banyak</button>";
+echo admin(" <button onclick='reset()' class='btn btn-danger'>Kosongkan Log Aktivitas</button></td></tr>");
 echo "</table>";
 echo "<hr>";
 echo "<div id='bawah'></div>";

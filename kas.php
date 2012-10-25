@@ -55,20 +55,20 @@ function uang(num) {
 	return (((sign)?'':'-') + num);
 }
 </script>
-<table name='kas' cellpadding='3' cellspacing='1' width='80%' align='center' style="border: 1px solid;">
+<table name='kas' cellpadding='3' cellspacing='1' width='80%' align='center' class="table table-striped table-hover">
 <tr><td></td><td colspan=5'><h2>Kas Perpustakaan</h2></td></tr>
 <tr>
     
-    <td colspan=5'>
-    <form action='' method='post' name='frm-kas'>
-        Rp.<input type='text' name='val' autocomplete='off'> Ket
+    <td colspan=6'>
+    <form action='' method='post' name='frm-kas' class="input-prepend">
+        <span class="add-on">Rp.</span><input id='prependedInput' type='text' name='val' autocomplete='off'> <span class="add-on">Ket</span>
         <input type='text' name='ket' autocomplete='off'>
-        <select name='jenis' onchange='cek_ok()' id='sel'>
+        <select name='jenis' onchange='cek_ok()' id='sel' style="width: 100px">
             <option value='pilih'>Pilih</option>
             <option value='keluar'>Keluar</option>
             <option value='masuk'>Masuk</option>
         </select>
-        <input type='submit' value='OK' disabled='disabled' name='tombol'>
+        <input type='submit' value='OK' disabled='disabled' name='tombol' class="btn btn-success" >
         </form>
     </td>
 </tr>
@@ -98,7 +98,7 @@ function uang(num) {
         $no++;
     }
     ?>
-<tr style='background-color: gray; color: white;'>
+<tr style='background-color: gray; color: silver;'>
     <td colspan='3' align='center'>Total</td>
     <td align='right'><script type='text/javascript'>document.write(uang(<?php echo $mas=@$kas->single("select sum(masuk) from kas"); ?>))</script></td>
     <td align='right'><script type='text/javascript'>document.write(uang(<?php echo $kel=@$kas->single("select sum(keluar) from kas"); ?>))</script></td>
