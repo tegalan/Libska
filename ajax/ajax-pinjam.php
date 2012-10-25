@@ -94,7 +94,19 @@ $siswa_ada=false;
 <?php
 if($siswa_ada){
 ?>
-<script type="text/javascript" src="./ajax/send.js"></script>
+
+<script type="text/javascript">
+    $("#pinjam-buku").submit(function(){
+            $.ajax({
+                url:'ajax/ajax-pinjam.php',
+                type: 'POST',
+                data: $(this).serialize(),
+                success:function(data){
+                    $("#content").html(data);
+                }
+            })
+        })
+</script>
 <form id="pinjam-buku" name="form-pinjam" onsubmit="return false" >
     <input type="text" name="peminjam">
     <input type="submit" value="Pinjam" class="btn">
