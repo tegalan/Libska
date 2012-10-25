@@ -31,7 +31,41 @@ $buku=$_GET["buku"];
 $siswa=new siswa();
 $buku=new buku();
 $buku->setKode($_GET["buku"]);
-echo $_POST["coba"];
+
+/*******Simpan Peminjaman**************/
+if($_GET["mode"]=="pinjam"){
+    $dsiswa=$_GET["siswa"];
+    $dbuku=$_GET["buku"];
+    $kembali=$_GET["kembali"];
+    //Inisialisasi data siswa
+    $cSiswa=new siswa();
+    $cSiswa->setInduk($dsiswa);
+    $meminjam=$cSiswa->getMeminjam()+1;
+    //Inisialisasi data buku
+    $cBuku=new buku();
+    $cBuku->setKode($dbuku);
+    $count=$cBuku->getCount()+1;
+    //Petugas
+    $ptgs=$_SESSION['nama'];
+    //Sql Query
+    $peminjaman=mysql_query("INSERT INTO pinjaman SET siswa=\"$dsiswa\", nama=\"".$cSiswa->getNama()."\", buku=\"$dbuku\", judul=\"".$cBuku->getJudul()."\", tgl_kembali=\"$kembali\", tgl_pinjam=\"".sekarang()."\", petugas=\"$ptgs\"");     
+    if($peminjaman){
+        $buku=mysql_query("UPDATE buku SET status=\"Kosong\", peminjam=\"$dsiswa\", count_pinjam=\"$count\" WHERE kd_buku=\"$dbuku\"");
+        if($buku){
+            $qSiswa=mysql_query("UPDATE siswa SET count_pinjam=\"$csis\" WHERE no_induk=\"$dsiswa\"");
+            if($qSiswa){
+                catat($ptgs, "Melayani ".$cSiswa->getNama()." meminjam ".$cBuku->getJudul()."");
+                echo "<script>$('#pop-pinjam').modal('hide');</script>";
+                echo "<script type='text/javascript'>window.location.reload(true);</script>";
+            }else{
+                echo "<div class=\"alert alert-error\">Terjadi kesalahan saat proses meminjam buku</div>";
+            }
+        }
+    }
+    //Stop eksekusi kode di bawah
+    exit(0);
+}
+/*******Simpan Peminjaman**************/
 ?>
 
 <script type="text/javascript">
@@ -54,7 +88,7 @@ echo $_POST["coba"];
 </form>
 <?php
 
-if($_POST["siswa"]){
+if($_POST["siswa"] or $_GET["siswa"]){
     
     $siswa->setInduk($_POST["siswa"]);
 ?>
@@ -94,11 +128,18 @@ $siswa_ada=false;
 <?php
 if($siswa_ada){
 ?>
-<script type="text/javascript" src="./ajax/send.js"></script>
-<form id="pinjam-buku" name="form-pinjam" onsubmit="return false" >
-    <input type="text" name="peminjam">
-    <input type="submit" value="Pinjam" class="btn">
-</form>
+<script type="text/javascript">
+    $('#tmbl-pinjam').click(function(){
+        $.ajax({
+                url:'ajax/ajax-pinjam.php?mode=pinjam&buku=<?php echo $_GET["buku"] ?>&siswa=<?php echo $siswa->getInduk(); ?>&kembali=<?php echo $kembali; ?>',
+                type: 'POST',
+                success:function(data){
+                    $("#content").html(data);
+                }
+            })
+    })
+</script>
+<a href="#" class="btn btn-primary" id="tmbl-pinjam">Pinjam</a> <a class="btn" href="#">Batal</a>
 <?
 }
 ?>

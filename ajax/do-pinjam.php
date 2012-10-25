@@ -31,6 +31,7 @@ $kali=$bok->hasil['count_pinjam']+1;
 $csis=$stud->hasil['count_pinjam']+1;
 //echo "Kali".$kali."<br> Csis".$csis;
 $namane=$stud->hasil['nama'];
+
 $lebokne=mysql_query("insert into pinjaman set siswa='$ind', buku='$kd', judul='$judul', tgl_kembali='$tempo', tgl_pinjam='$sek', petugas='$ptgs'");
     if($lebokne){
         //echo "step 1";
