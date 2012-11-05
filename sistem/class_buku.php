@@ -44,7 +44,7 @@ class buku{
         return $r["peminjam"];
     }
     public function getCount(){
-        $sql=mysql_query("SELECT judul FROM buku WHERE kd_buku = \"".$this->kode."\"");
+        $sql=mysql_query("SELECT count_pinjam FROM buku WHERE kd_buku = \"".$this->kode."\"");
         $r=mysql_fetch_array($sql);
         return $r["count_pinjam"];
     }

@@ -127,7 +127,7 @@ $siswa->sql("select * from siswa where $dari like '%$cari%' && kelas like '$kela
 
 <form action="" method="post" name='naik-kelas'>
     Kode:<input type='password' name='pwd' id='naik-pwd' onclick='document.forms["naik-kelas"]["naikt"].disabled=false;'>
-    <input onclick="return confirm('Yakin Melakukan Proses ini?\nIni akan merubah data kelas siswa secara otomatis.\n\nLanjutkan?')" id='naik-tmbl' name='naikt' type='submit' value='Naik Kelas' disabled='disabled'>
+    <input style="margin-top:-10px;" class="btn btn-info" onclick="return confirm('Yakin Melakukan Proses ini?\nIni akan merubah data kelas siswa secara otomatis.\n\nLanjutkan?')" id='naik-tmbl' name='naikt' type='submit' value='Naik Kelas' disabled='disabled'>
 </form>
 </fieldset>
 <table width='100%' cellpadding='3' cellspacing='1' name='siswa' style='font-size: 12px; border: 1px solid;'>
@@ -138,7 +138,7 @@ $siswa->sql("select * from siswa where $dari like '%$cari%' && kelas like '$kela
             
                 <input type='text' name='no_induk' size='10' title='Nomor Induk' disabled='disabled'>
                 <input type='text' name='nama' title='Nama Siswa' disabled='disabled'>
-                <select name='kelas' disabled='disabled'>
+                <select name='kelas' disabled='disabled' style="width: 100px;">
                     <option value='X'>X</option>
                     <option value='XI'>XI</option>
                     <option value='XII'>XII</option>
@@ -160,7 +160,7 @@ $siswa->sql("select * from siswa where $dari like '%$cari%' && kelas like '$kela
                         <option value='TU'>Tata Usaha</option>
                     </optgroup>                   
                 </select>
-                <input type='submit' value='+' name='tambah' disabled='disabled'>
+                <input style="margin-top: -10px;" class="btn btn-info" type='submit' value='Tambah' name='tambah' disabled='disabled'>
             </form>
         </td>
     </tr>
@@ -175,7 +175,7 @@ $siswa->sql("select * from siswa where $dari like '%$cari%' && kelas like '$kela
                     <option value='no_induk'>No Induk</option>
                     <option value='nama' <?php if($dari=='nama') echo "selected='selected'"; ?> >Nama</option>
                 </select>
-                <select name='kelas' onchange='submiter()'>
+                <select name='kelas' onchange='submiter()' style="width: 100px;">
                     <option value=''>Semua</option>
                     <option value='X' <?php if($kelas=='X') echo "selected='selected'"; ?>>X</option>
                     <option value='XI' <?php if($kelas=='XI') echo "selected='selected'"; ?>>XI</option>
@@ -198,14 +198,14 @@ $siswa->sql("select * from siswa where $dari like '%$cari%' && kelas like '$kela
                         <option value='TU' <?php if($jur=='TU') echo "selected='selected'"; ?>>Tata Usaha</option>
                     </optgroup>  
                 </select>
-                <select name='jumlah' onchange='submiter()'>
+                <select name='jumlah' onchange='submiter()'  style="width: 100px;">
                     <option>40</option>
                     <option>80</option>
                     <option>120</option>
                     <option>200</option>
                     <option value='<?php echo $siswa->baris("select * from siswa"); ?>'>Semua</option>
                 </select>
-                <input type='submit' value='OK' name='ok'>
+                <input style="margin-top: -9px;" class="btn btn-info" type='submit' value='OK' name='ok'>
             </form>
         </td>
     </tr>

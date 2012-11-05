@@ -9,7 +9,7 @@ include 'sistem/config.php';
 //include 'run.php';
 sambung();
 get_kepala();
-cek_user();
+
 if(isset($_GET['stat'])){
     include 'halaman/stat.php';
     get_kaki();
@@ -17,102 +17,112 @@ if(isset($_GET['stat'])){
 }
 
 ?>
-<style>
-   #pop:hover{
-    background-color: #CCFFFF;
-    border-bottom-color: red;
-    border-bottom: 1px dotted;
-    font-style: italic;
-   }
-   #pop{
-    background-color: #CCCCFF;
-   }
-   #popl{
-    font-size: 12px;
-    background-color: #99FFFF;
-   }
-</style>
 <script type='text/javascript'>
     $(document).ready(function(){
-        $.ajax({
-            url:'run.php',
-            success: function(data){
-                $("#res").html(data)
-            }
+        $(".tempo").click(function(){
+            $.ajax({
+                url:'run.php',
+                success: function(data){
+                    $("#res").html(data);
+                }
             })
-        
-        })
+        });
+      });    
 </script>
-<table width='100%' cellpadding='2' cellspacing='2' border='0'><!--Tabel Induk-->
-    <tr>
-        <td width='50%'><b>Buku Top 50</b>
-            <table width='100%' cellpadding='2' cellspacing='1' border='0' style='border: 1px inset;' id='popl'><!--Tabel anak-->
-            <tr style='background-color: #336666; color: #FFFFCC;' align='center'>
+
+<div class="tabbable" style="background: white; border-radius:6px; padding: 2px;"> <!-- Only required for left/right tabs -->
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="#tab1" data-toggle="tab">Welcome</a></li>
+    <li class="aktif"><a href="#tab2" data-toggle="tab">Peminjam Aktif</a></li>
+    <li class="populer"><a href="#tab3" data-toggle="tab">Buku Populer</a></li>
+    <li class="tempo"><a id="tempo" href="#tab4" data-toggle="tab">Buku Jatuh Tempo</a></li>
+  </ul>
+  <div class="tab-content" style="padding: 5px;">
+    <div class="tab-pane active" id="tab1">
+      <!--Welcome-->
+      <div class="hero-unit">
+        <h1>Selamat Datang <?php $nm=explode(" ",$_SESSION['nama']); echo $nm[0];  ?> !</h1>
+        <p>Selamat datang di program administrasi perpustakaan Libska Versi <?php echo getVersion(); ?></p>
+        <p>
+          <a class="btn btn-primary btn-large" href="buku.php">
+            Lanjutkan 
+          </a>
+        </p>
+      </div>
+    </div>
+    <div class="tab-pane" id="tab2">
+    <!--peminjam aktif-->
+     <table class="table table-striped table-hover" width='100%' cellpadding='2' cellspacing='1' style='font-size: 12px; border: 1px inset;'><!--Tabel anak2--> 
+        <thead>       
+            <tr align='center' style="font-weight: bold;">
+                <td>No</td><td>Nama</td><td>Kelas</td><td>Jurusan</td><td>Peminjaman</td>
+            </tr>
+        </thead> 
+        <?php $i='1'; $ab=mysql_query("select * from siswa where count_pinjam !='0' order by count_pinjam DESC limit 0,50"); while($cde=mysql_fetch_array($ab)){ ?>
+            <tr>
+                <td><?php echo $i; ?></td>
+                <td><a title="Klik Untuk Melihat" href="peminjaman.php?pencarian=<?php echo $cde['no_induk']; ?>"><?php echo $cde['nama']; ?></a></td>
+                <td><?php echo $cde['kelas']; ?> </td>
+                <td><?php echo $cde['jurusan']; ?> </td>      
+                <td><?php echo $cde['count_pinjam']; ?> Kali</td>
+            </tr>            
+         <?php $i++; } ?>
+      </table><!--Tabel anak2--> 
+    </div>
+    <div class="tab-pane" id="tab3">
+    <!--buku populer-->
+       <table  class="table table-striped table-hover" width='100%' cellpadding='2' cellspacing='1' border='0' style='border: 1px inset;' id='popl'><!--Tabel anak-->
+        <thead>
+            <tr align='center' style="font-weight: bold;">
                 <td>No</td><td>Judul Buku</td><td>Status</td><td>Di Pinjam</td>
             </tr>
-            <?php $popu=mysql_query("select * from buku where count_pinjam != '0' order by count_pinjam DESC limit 0,50"); $no='1'; while($pop=mysql_fetch_array($popu)){ ?>
-                <tr id='pop'>
-                    <td><?php echo $no; ?></td><td><?php echo $pop['judul']; ?></td><td><?php echo $pop['status']; ?></td><td><?php echo $pop['count_pinjam']; ?> Kali</td>
-                </tr>
-             <?php $no++; } ?>   
-            </table><!--Tabel anak-->   
-        </td><!--TD Untuk Kolom Kedua-->
-        <td valign='top'><b>Peminjam Aktif</b>
-            <table width='100%' cellpadding='2' cellspacing='1' style='background-color: #FFFF99; font-size: 12px;'><!--Tabel anak2--> 
-                <tr style='background-color: lightgreen;' align='center'>
-                    <td>No</td><td>Nama</td><td>Peminjaman</td>
-                </tr>
-                <?php $i='1'; $ab=mysql_query("select * from siswa where count_pinjam !='0' order by count_pinjam DESC limit 0,50"); while($cde=mysql_fetch_array($ab)){ ?>
-                    <tr style='background-color: #CCFF99;'>
-                        <td><?php echo $i; ?></td><td><a title="Klik Untuk Melihat" href="peminjaman.php?pencarian=<?php echo $cde['no_induk']; ?>"><?php echo $cde['nama']; ?></a></td><td><?php echo $cde['count_pinjam']; ?> Kali</td>
-                    </tr>
-                    
-                <?php $i++; } ?>
-            </table><!--Tabel anak2--> 
-        </td>
-    </tr>
-    <tr>
-        <td colspan='2'><!--Tabel anak2.1--> 
-<table width='100%' style='font-size: 12px;' cellspacing='1' cellpadding='2'>
-<tr>
-    <td colspan='4'><b>Daftar Buku Yang Telah Jatuh Tempo</b></td>
-</tr>
-<tr style='background-color: orange;' align='center'>
-    <td>No</td><td>Kode Buku</td><td>Judul Buku</td><td>Peminjam</td><td>Tanggal</td>
-</tr>
-<?php
-$jatuh=new db();
-$saiki=sekarang();
-$jatuh->sql("select * from tempo");
-$jum=$jatuh->getJml();
-if($jum !='0'){
-    $noer=1;
-    while($jatuh->hasil()){
-        echo "<tr id='pop' title='Kode Buku ".$jatuh->hasil['buku']."'>";
-        echo "<td>$noer</td>";
-        echo "<td>".$jatuh->hasil['buku']."</td>";
-        echo "<td>".$jatuh->hasil['judul']."</td>";
-        echo "<td>".$jatuh->hasil['siswa']."</td>";
-        echo "<td>".$jatuh->hasil['tanggal']."</td>";
-        echo "</tr>";
-        $noer++;
-    }
-}else{
-    echo "<tr id='pop' align='center'><td colspan='5' id='res'>Tidak Ada</td></tr>";
-    echo "<td colspan='5'><div style=\"background-color: #ebf2e6;\" id='reds'></div></tr>";
-}
-?>
-<tr>
-    <td colspan='5'><div style="background-color: #ebf2e6;" id='res'></div></tr>
-</table>
-        </td>
-        
-    </tr>
-
-</table><!--Tabel Induk-->
-<hr>
-<marquee>Selamat Datang <?php echo $_SESSION['nama']; ?> | Perpustakaan <?php echo get_sistem("nama"); ?> | <?php echo get_sistem("alamat"); ?> | <?php echo get_sistem("web"); ?></marquee>
-<hr>
+        </thead>
+        <?php $popu=mysql_query("select * from buku where count_pinjam != '0' order by count_pinjam DESC limit 0,50"); $no='1'; while($pop=mysql_fetch_array($popu)){ ?>
+            <tr id='pop'>
+                <td><?php echo $no; ?></td>
+                <td><?php echo $pop['judul']; ?></td>
+                <td><?php echo $pop['status']; ?></td>
+                <td><?php echo $pop['count_pinjam']; ?> Kali</td>
+            </tr>
+            <?php $no++; } ?>   
+        </table><!--Tabel anak-->
+    </div>
+    <div class="tab-pane" id="tab4">
+    <!--jatuh tempo-->
+        <table  class="table table-striped table-hover" width='100%' style='font-size: 12px; border: 1px inset;' cellspacing='1' cellpadding='2'>
+          <thead>
+            <tr align='center' style="font-weight: bold;">
+              <td>No</td><td>Kode Buku</td><td>Judul Buku</td><td>Peminjam</td><td>Tanggal</td>
+            </tr>
+          </thead>
+          <?php
+          $jatuh=new db();
+          $saiki=sekarang();
+          $jatuh->sql("select * from tempo");
+          $jum=$jatuh->getJml();
+          if($jum !='0'){
+              $noer=1;
+              while($jatuh->hasil()){
+                  echo "<tr id='pop' title='Kode Buku ".$jatuh->hasil['buku']."'>";
+                  echo "<td>$noer</td>";
+                  echo "<td>".$jatuh->hasil['buku']."</td>";
+                  echo "<td>".$jatuh->hasil['judul']."</td>";
+                  echo "<td>".$jatuh->hasil['siswa']."</td>";
+                  echo "<td>".$jatuh->hasil['tanggal']."</td>";
+                  echo "</tr>";
+                  $noer++;
+              }
+          }else{
+              echo "<tr id='pop' align='center'><td colspan='5' id='res'><a class='btn' href='#' id='tempo'>Tidak Ada</a></td></tr>";
+              echo "<td colspan='5'><div style=\"background-color: #ebf2e6;\" id='reds'></div></tr>";
+          }
+          ?>
+          <tr>
+              <td colspan='5'><div style="background-color: #ebf2e6;" id='res'></div></tr>
+          </table>
+    </div>
+  </div>
+</div>
 <?
 get_kaki();
 ?>

@@ -144,18 +144,7 @@ if(isset($_GET['kmb'])){
         }else{
             echo "Gagal Menghapus Jatuh Tempo !!";
         }
-        catat($_SESSION['nama'],"Mengembalikan Buku $kd_buku dari $cari ");
-        //echo "<script type='text/javascript'>alert('Buku Sudah Dikembalikan !')</script>";
-        echo "<script type='text/javascript'>
-        $(document).ready(function(){
-                $(\"#pesan\").show();   
-                $(\"#pesan\").html(\"Buku Sudah dikembalikan\");
-                setTimeout('tutup()',2000);
-            });        
-        function tutup(){
-            $(\"#pesan\").slideUp('slow');
-        }
-        </script>";
+        catat($_SESSION['nama'],"Mengembalikan Buku $kd_buku dari $cari ");        
     } 
 }
 /*Ambil Peminjam*/
@@ -201,22 +190,22 @@ $sqll=mysql_query("select * from pinjaman where $where like '%$cari%' && kembali
 $ht2=mysql_num_rows($sqll);
 
 ?>
+<script type="text/javascript" src="ajax/ajax-list-pinjam.js"></script>
 <script type='text/javascript'>
   function kirim(){
     document.forms['frm-peminjaman'].submit();
   }
 </script>
 <!--modal popup peminjaman-->
-<div style="width: 900px; margin-left: -30%; margin-top: -300px;" class="modal hide fade" id="detail-pinjam" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div style="height: 640px; width: 900px; margin-left: -30%; margin-top: -320px;" class="modal hide fade" id="detail-pinjam" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true" >x</button>
     <h3>Peminjaman</h3>
   </div>
-  <div class="modal-body">
-  <a href="#" class="btn" data-dismiss="modal">Close</a>
-    <a href="#" class="btn btn-primary">Save changes</a>
-    <p>Memuat Data..</p>
-    
+  <div class="modal-body" style="height: 800px; max-height: 530px;">
+    <div id="content-pinjam" style="margin-botom: 3px;">
+        
+    </div>
   </div>
   <div class="modal-footer">
     
@@ -309,8 +298,18 @@ $ht2=mysql_num_rows($sqll);
         </td>
     </tr>
     
-    <?php if($hisi=='1'){ ?>
-     <script type="text/javascript">$('#detail-pinjam').modal('show');</script>
+    <?php if($hisi=='1' && $_GET['kembali']=="0" && $ht!='0'){ //jika siswa di temukan 1?>
+        <script type="text/javascript">$('#detail-pinjam').modal('show');</script>
+        <script type="text/javascript">
+                   $.ajax({
+                       url:'ajax/ajax-list-pinjam.php?siswa=<?php echo $cari ?>',
+                       type: 'POST',
+                       data: $(this).serialize(),
+                       success:function(data){
+                           $("#content-pinjam").html(data);
+                       }
+                   })
+       </script>
     <?php } ?>
     <tr align='center'>
         <td width='30'>No.</td>
@@ -340,16 +339,23 @@ $ht2=mysql_num_rows($sqll);
         if($ht=='0'){
             echo "<tr><td colspan='8' style='background-color: pink;'>Data tidak ditemukan, mohon periksa kembali pencarian</td></tr>";
         }
-        if($kembaline=='all'){
-        echo "<tr style='background-color: lightblue;'><td colspan='8'>Ket: <b style='background-color: #CCFF33;'> &nbsp;Kembali&nbsp; </b>&nbsp;<b style='background-color: #FF6633;'> &nbsp;Belum Kembali&nbsp; </b></td></tr>";
-        }
+        
         
         ?>
     <tr>
         <td colspan='8' class="alert alert-error">Menampilkan : <b><?php echo $ht; ?></b> | Belum Kembali :  <b><?php echo $belum; ?></b> | Total Data : <b><?php echo $dari; ?></b></td>
     </tr>
     <tr>
-        <td colspan='8' align='center'><a style='text-decoration: none;' href='<?php echo "?where=$where&pencarian=$cari&kembali=$kembaline&banyak=$bates&hal=".max($hal-1, 0); ?>'> <img src='tampilan/gambar/mbalik.png' width='22' height='22' align='left' title='Sebelumnya'> </a>|<a style='text-decoration: none;' href='<?php echo "?where=$where&pencarian=$cari&kembali=$kembaline&banyak=$bates&hal=".min($hal+1, $jhal-1); ?>'> <img src='tampilan/gambar/lanjut.png' width='22' height='22' align='right' title='Selanjutnya'></a></td>
+        <td colspan='8'>         
+            <ul class="pager">
+                <li class="previous">
+                    <a style='text-decoration: none;' href='<?php echo "?where=$where&pencarian=$cari&kembali=$kembaline&banyak=$bates&hal=".max($hal-1, 0); ?>'> &larr; Sebelumnya </a>
+                </li>
+                <li class="next">
+                  <a style='text-decoration: none;' href='<?php echo "?where=$where&pencarian=$cari&kembali=$kembaline&banyak=$bates&hal=".min($hal+1, $jhal-1); ?>'>Selanjutnya &rarr;</a>
+                </li>
+            </ul>
+        </td>
     </tr>
 </table>
 

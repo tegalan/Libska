@@ -111,12 +111,14 @@
                 <tr>
                     <td>Peminjaman</td>
                     <td>:</td>
-                    <td><b><script type='text/javascript'>document.write(format(<?php $blne=sekarang("bln")." ".date('Y'); $blne=$blne['1']; echo $peminjam->baris("select * from pinjaman where tgl_pinjam like '%$blne%'"); ?>));</script></b></td>
+                    <?php $bulan_ini=explode(' ',sekarang());  ?>
+                    <td><b><script type='text/javascript'>document.write(format(<?php echo $peminjam->baris("select * from pinjaman where tgl_pinjam like '%".$bulan_ini[1]." ".date('Y')."%'");  ?>));</script></b></td>
+                    
                 </tr>
                 <tr>
                     <td>Pengembalian</td>
                     <td>:</td>
-                    <td><b><script type='text/javascript'>document.write(format(<?php echo $peminjam->baris("select * from pinjaman where kembaline like '%$blne%'"); ?>));</script></b></td>
+                    <td><b><script type='text/javascript'>document.write(format(<?php echo $peminjam->baris("select * from pinjaman where kembaline like '%".$bulan_ini[1]." ".date('Y')."%'"); ?>));</script></b></td>
                 </tr>
                 <tr>
                     <td colspan='3'><br></td>

@@ -87,7 +87,7 @@ $jhal=ceil($jumlah/$bts);
 	$(this).removeData('modal');
       });
 </script>
-<h2>Katalog Buku</h2>
+<h2>Katalog Buku <a href="buku.php?tambah=1" class="btn btn-info">Tambah</a></h2>
 <form id='cari' action='' method='GET' name='frm-buku'>
 <table style='background-color: #99ccff;' width='100%' cellpadding='3' cellspacing='1' class="table table-striped table-hover">
     <tr>
@@ -160,7 +160,7 @@ $jhal=ceil($jumlah/$bts);
 sambung();
 $a=mysql_query("select * from buku where $where like '%$key%' && status like '$stat' order by $order ASC limit $mulai, $bts");
 $no=1;
-$chek=mysql_num_rows($a);
+$chek=@mysql_num_rows($a);
 if($chek==1){
   ?>
   <script type="text/javascript">
@@ -168,7 +168,7 @@ if($chek==1){
   </script>
   <?php
 }
-while ($m=mysql_fetch_array($a)){
+while ($m=@mysql_fetch_array($a)){
     
     if($chek=='1' && $m['status'] != 'Kosong'){
     $judulku=addslashes($m['judul']);

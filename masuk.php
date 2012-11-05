@@ -23,8 +23,11 @@ if ($pencet != '' && $nama != '' && $kunci != ''){
       mysql_query("update anggota set login='$log' where user='$nama'");
       $_SESSION['nama']=$t['nama'];
       $_SESSION['level']=$t['level'];
+      $_SESSION['uid']=$t['id'];
       catat($_SESSION['nama'],"Berhasil Login");
-      header('location: index.php');
+      //header('location: index.php');
+      echo "<script>window.location='index.php'</script>";
+      exit();
     }else{
         catat($nama,"Gagal Login");
         echo "<script type='text/javascript'>alert('Kombinasi Salah !');</script>";
@@ -38,18 +41,31 @@ if ($pencet != '' && $nama != '' && $kunci != ''){
 
 <script type='text/javascript'>
     function about(){
-        alert("Libska Version <?php echo get_sistem("versi"); ?>\nPerpustakaan <?php echo get_sistem("nama"); ?>\n\nProgram By: Sucipto\nDedicated To: SMKN 1 Ngawi\nVisit: www.sucipto.net\n\nCopyright 2012 Alright Reserved")
+        alert("Libska Version <?php echo getVersion(); ?>\nPerpustakaan <?php echo get_sistem("nama"); ?>\n\nProgram By: Sucipto\nDedicated To: SMKN 1 Ngawi\nVisit: www.sucipto.net\n\nCopyright 2012 Alright Reserved")
     }
 </script>
-
+<script src='./tampilan/jq.js' type='text/javascript'></script>
+<script type='text/javascript'>
+    $(document).ready(function(){
+       
+            $.ajax({
+                url:'run.php',
+                success: function(data){
+                    //$("#res").html(data);
+                    
+                }
+            })
+       
+      });    
+</script>
 </head>    
 <body>
-<div id='login' style="width: 500px; border: 1px solid; margin: 100px auto; padding: 10px;">
-<center><h2><i>Perpustakaan <?php echo get_sistem("nama"); ?></i></h2></center>
+<div id='login' style="width: 300px; border: 1px solid; margin: 100px auto; padding: 10px;">
+
         <fieldset>
             <legend> <img src='tampilan/gambar/pinjem.png'> Login Petugas Perpustakaan</legend>
             <form action='' method='POST'>
-        <table border='0' cellpadding='3' cellspacing='2' width='100%'>
+        <table border='0' cellpadding='3' cellspacing='2' width='100%' style="margin-left:50px;">
             <tr>
                 <td><input type='text' placeholder="Username" name='nama' style="height: 30px;"></td>
             </tr>
@@ -64,7 +80,7 @@ if ($pencet != '' && $nama != '' && $kunci != ''){
         </table>
         </form>
         </fieldset>
-<i style='font-size: 12px; font-style: italic; color: gray;'> Copyright &copy; <?php echo date('Y'); ?> | SkanSoft &trade; <b style='font-size: 11px;'>LibSka Version: <?php echo get_sistem("versi"); ?></b> | <b onclick='about()' style='font-size: 12px;'>Tentang</b></i>
+<i style='font-size: 12px; font-style: italic; color: gray;'> Copyright &copy; <?php echo date('Y'); ?> | <b style='font-size: 11px;'>Libska Version: <?php echo getVersion();; ?></b> | <b onclick='about()' style='font-size: 12px;'>Tentang</b></i>
 </div>
 </body>    
 </html>

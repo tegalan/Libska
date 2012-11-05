@@ -18,7 +18,7 @@ sambung();
     $bln=$indo[$bulan+1];
     $hari_ini=sekarang();//"$hari $bln $tahun";
     //**tgl kembali**//
-    $waktu = date("d-n-Y", mktime(0,0,0,date("m"),date("d")+14,date("Y")));
+    $waktu = date("d-n-Y", mktime(0,0,0,date("m"),date("d")+get_sistem("lama"),date("Y")));
     $x=explode('-', $waktu);
     $hari2=$x['0']; 
     $bulan2=$x['1'];
@@ -52,9 +52,9 @@ if($_GET["mode"]=="pinjam"){
     if($peminjaman){
         $buku=mysql_query("UPDATE buku SET status=\"Kosong\", peminjam=\"$dsiswa\", count_pinjam=\"$count\" WHERE kd_buku=\"$dbuku\"");
         if($buku){
-            $qSiswa=mysql_query("UPDATE siswa SET count_pinjam=\"$csis\" WHERE no_induk=\"$dsiswa\"");
+            $qSiswa=mysql_query("UPDATE siswa SET count_pinjam=\"$meminjam\" WHERE no_induk=\"$dsiswa\"");
             if($qSiswa){
-                catat($ptgs, "Melayani ".$cSiswa->getNama()." meminjam ".$cBuku->getJudul()."");
+                catat($ptgs, "Melayani ".$cSiswa->getNama()." meminjam ".$cBuku->getJudul()." ".$count);
                 echo "<script>$('#pop-pinjam').modal('hide');</script>";
                 echo "<script type='text/javascript'>window.location.reload(true);</script>";
             }else{
@@ -119,6 +119,9 @@ $siswa_ada=false;
 </tr>
 <tr>
     <td>Pengarang</td><td>:</td><td><?php echo $buku->getPengarang(); ?></td>
+</tr>
+<tr>
+    <td>Di Pinjam</td><td>:</td><td><?php echo $buku->getCount(); ?></td>
 </tr>
 </table>
 <h4>Periode</h4>

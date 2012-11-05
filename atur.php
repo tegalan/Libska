@@ -13,12 +13,15 @@ if($_POST['atur']!=''){
     $nama=mysql_real_escape_string($_POST['nama']);
     $alamat=mysql_real_escape_string($_POST['alamat']);
     $web=mysql_real_escape_string($_POST['web']);
+    $lama=mysql_real_escape_string($_POST['lPinjam']);
     //echo "$nama $alamat $web";
     set_sistem("Nama",$nama);
     set_sistem("Alamat",$alamat);
     set_sistem("web",$web);
+    set_sistem("Lama",$lama);
 }
 ?>
+
 <fieldset>
 <legend>Pengaturan</legend>
 <b>Sistem</b><br>
@@ -34,36 +37,17 @@ if($_POST['atur']!=''){
             <td>Website Perpustakaan</td><td>:</td><td><input size='30' type='text' name='web' value='<?php echo get_sistem("web"); ?>'></td>
         </tr>
         <tr>
-            <td>Versi Libska</td><td>:</td><td><?php echo get_sistem("versi"); ?></td>
+            <td>Lama Peminjaman</td><td>:</td><td><input class='input-small' type="text" name="lPinjam" value='<?php echo get_sistem("lama"); ?>'> Hari</td>
         </tr>
         <tr>
-            <td><input type='submit' value='Simpan' name='atur'></td><td></td><td><input type='reset' value='Reset'></td>
+            <td>Versi Libska</td><td>:</td><td class="label label-success"><?php echo getVersion(); ?></td>
+        </tr>
+        <tr style="padding: 5px;">
+            <td style="padding: 5px;"><input class="btn btn-info" type='submit' value='Simpan' name='atur'></td><td></td><td><input class="btn btn-danger" type='reset' value='Reset'></td>
         </tr>
     </table>
 </form>
 <hr>
-<b>Pengguna</b><br>
-
-<table border='1' cellspacing='0'>
-<tr>
-    <td>No.</td><td>User</td><td>Nama</td><td>Level</td><td>Login</td>
-</tr>
-<?php
-$ser=mysql_query("select * from anggota");
-$n=1;
-while($us=mysql_fetch_array($ser)){
-    echo "<tr>";
-    echo "<td>$n</td>";
-    echo "<td>".$us['user']."</td>";
-    echo "<td>".$us['nama']."</td>";
-    echo "<td>".$us['level']."</td>";
-    echo "<td>".$us['login']."</td>";
-    echo "</tr>";
-    $n++;
-}
-?>
-</table>
-
 </fieldset>
 
 <?

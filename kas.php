@@ -72,7 +72,7 @@ function uang(num) {
         </form>
     </td>
 </tr>
-    <tr style='background-color: gray; color: white;'>
+    <tr style='background-color: gray; color: #808080;'>
         <td width='20'>No</td><td width='150'>Tanggal</td><td>Uraian</td><td>Masuk</td><td>Keluar</td><td>Saldo</td>
     </tr>
     <?php

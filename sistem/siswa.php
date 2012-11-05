@@ -1,6 +1,7 @@
 <?php
 class siswa{
     private $induk;
+    //dari tabel siswa
     public function setInduk($induk){
         $this->induk=$induk;
     }
@@ -40,6 +41,17 @@ class siswa{
         $mysql=mysql_query("SELECT denda FROM siswa WHERE no_induk=\"".$this->induk."\"");
         $r=mysql_fetch_array($mysql);
         return $r["denda"];
+    }
+    //dari data semua
+    public function getSedangMeminjam(){
+        $induk=$this->getInduk();
+        $sql=mysql_query("SELECT * FROM pinjaman WHERE siswa=\"$induk\" AND kembali=\"0\"");
+        return mysql_num_rows($sql);
+    }
+    public function getTotalMeminjam(){
+        $induk=$this->getInduk();
+        $sql=mysql_query("SELECT * FROM pinjaman WHERE siswa=\"$induk\"");
+        return mysql_num_rows($sql);
     }
 }
 

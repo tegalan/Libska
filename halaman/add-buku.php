@@ -101,19 +101,19 @@ if($_SESSION['level']=='Admin'){
         <td>Kode Buku</td><td> : </td><td><input type='text' name='kd_buku' id='kb' value='<?php echo $valKB; ?>'></td>
     </tr>
      <tr>
-        <td>Judul Buku</td><td> : </td><td><input type='text' name='judul' size='40' value="<?php echo $arr['judul']; ?>"></td>
+        <td>Judul Buku</td><td> : </td><td><input class='input-xlarge' type='text' name='judul' size='40' value="<?php echo $arr['judul']; ?>"></td>
     </tr>
      <tr>
-        <td>Pengarang</td><td> : </td><td><input type='text' name='pengarang' value="<?php echo $arr['pengarang']; ?>"></td>
+        <td>Pengarang</td><td> : </td><td><input class='input-xlarge' type='text' name='pengarang' value="<?php echo $arr['pengarang']; ?>"></td>
     </tr>
     <tr>
-        <td>Tahun terbit</td><td> : </td><td><input type='text' name='tahun' size='10' value='<?php echo $arr['thn_terbit']; ?>'></td>
+        <td>Tahun terbit</td><td> : </td><td><input  class='input-small' type='text' name='tahun' size='10' value='<?php echo $arr['thn_terbit']; ?>'></td>
     </tr>
     <tr>
-        <td>Penerbit</td><td> : </td><td><input type='text' name='penerbit' value="<?php echo $arr['penerbit']; ?>"></td>
+        <td>Penerbit</td><td> : </td><td><input class='input-xlarge' type='text' name='penerbit' value="<?php echo $arr['penerbit']; ?>"></td>
     </tr>
     <tr>
-        <td>Harga</td><td> : </td><td><input type='text' name='harga' size='10' value="<?php echo $arr['harga']; ?>"></td>
+        <td>Harga</td><td> : </td><td><input class='input-small' type='text' name='harga' size='10' value="<?php echo $arr['harga']; ?>"></td>
     </tr>
     <tr><td colspan='3'><input type='submit' value='Tambah' name='tambah'></td></tr>
 </table>

@@ -255,6 +255,9 @@ class exel{
 
     }
 }
+function getVersion(){
+    return "3.0.0";
+}
 
 function get_sistem($opt){
     $sql=mysql_query("select * from sistem where param='$opt'");
@@ -262,6 +265,7 @@ function get_sistem($opt){
     
     return $q['value'];
 }
+
 function set_sistem($inpt, $val){
     $s=mysql_query("update sistem set value='$val' where param='$inpt'");
     if(!$s){

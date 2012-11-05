@@ -123,9 +123,9 @@ if($_GET["do"]=="restore"){
 }
 get_kepala();
 ?>
-<button style="font-weight:bold; width: 100%; height: 50px; font-size: 24px" onclick="window.location='backup.php?do=backup'">Backup Database</button>
+<button class="btn btn-success" style="font-weight:bold; width: 100%; height: 50px; font-size: 24px" onclick="window.location='backup.php?do=backup'">Backup Database</button>
 <form action="backup.php?do=restore" method="post" enctype='multipart/form-data'>
     <input name="restore" type="file" style="font-weight:bold; width: 77%; height: 50px; font-size: 24px; margin: 5px 0;">
-    <input type='submit' value="Restore" style="font-weight:bold; width: 20%; height: 50px; font-size: 24px; float: right; margin: 5px 0">
+    <input class="btn btn-primary" type='submit' value="Restore" style="font-weight:bold; width: 20%; height: 50px; font-size: 24px; float: right; margin: 5px 0">
 </form>
 <?php get_kaki(); ?>
