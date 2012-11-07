@@ -119,4 +119,6 @@ if($_SESSION['level']=='Admin'){
 </table>
 </form>
 </fieldset>
-<?php } ?>
+<?php }else{
+    echo "<p class='alert alert-error'>Maaf, anda tidak memiliki akses ke halaman ini.</p>";
+}?>

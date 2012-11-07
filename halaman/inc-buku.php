@@ -56,9 +56,8 @@ $jhal=ceil($jumlah/$bts);
     <h3>Peminjaman</h3>
   </div>
   <div class="modal-body" style="max-height: 500px;">
-  <a href="#" class="btn" data-dismiss="modal">Close</a>
-    <a href="#" class="btn btn-primary">Save changes</a>
-    <p>Memuat Data..</p>
+    
+    <img src="../tampilan/gambar/lodeng2.gif">
     
   </div>
   <div class="modal-footer">
@@ -74,7 +73,7 @@ $jhal=ceil($jumlah/$bts);
   </div>
   <div class="modal-body">
     
-    <p>Buku yang anda maksud sudah di pinjam</p>
+    <p class="alert alert-success">Buku yang anda maksud sudah di pinjam</p>
     
   </div>
   <div class="modal-footer">
