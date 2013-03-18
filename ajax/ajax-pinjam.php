@@ -1,4 +1,5 @@
 <?php
+error_reporting(0);
 session_start();
 /*
 File: ajax-pinjam.php
@@ -150,7 +151,7 @@ if($siswa_ada){
     })
 </script>
 <a href="#" class="btn btn-primary" id="tmbl-pinjam">Pinjam</a> <a class="btn" href="#" data-dismiss="modal" aria-hidden="true">Batal</a>
-<?
+<?php
 }
 ?>
 <?php }else{ ?>
