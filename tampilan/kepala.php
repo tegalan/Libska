@@ -4,7 +4,7 @@ File: kepala.php
 Fungsi: Mengatur Tampilan bagian atas
 Auth: ShowCheap
 */
-error_reporting(0);
+//error_reporting(0);
 cek_user();
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
@@ -55,21 +55,21 @@ cek_user();
     <a class="brand" href="#" style="margin-left: 5px;"> Libska V3 </a>
     <ul class="nav">
         <li class="divider-vertical"></li>
-        <li><a rel='tooltip' data-placement='bottom' data-original-title='Tooltip on bottom' href='index.php' ><img src='tampilan/gambar/omah.png' width='22' height='22'></a></li>
+        <li><a rel='tooltip' data-placement='bottom' data-original-title='Tooltip on bottom' href='index.php' ><i class=" icon-home"></i></a></li>
         <li class="divider-vertical"></li>
-        <li><a href='#' onclick='window.location="buku.php"' title='Dafar Buku'><b>Katalog Buku</b></a></li>
+        <li><a href='#' onclick='window.location="buku.php"' title='Dafar Buku'><i class=" icon-book"></i> <b>Katalog Buku</b></a></li>
         <li class="divider-vertical"></li>
-        <li><a href='#' onclick='window.location="peminjaman.php"' title='Daftar Pinjaman'><b>Peminjaman</b></a></li>
+        <li><a href='#' onclick='window.location="peminjaman.php"' title='Daftar Pinjaman'><i class=" icon-folder-open"></i> <b>Peminjaman</b></a></li>
         <li class="divider-vertical"></li>
         <li class="dropdown">
-            <a href='#' class="dropdown-toggle" role="button" data-toggle="dropdown" data-target="#" title='Daftar Pinjaman'><b>Menu</b> <b class="caret"></b></a>
+            <a href='#' class="dropdown-toggle" role="button" data-toggle="dropdown" data-target="#" title='Daftar Pinjaman'><i class="  icon-th-list"></i> <b>Menu</b> <b class="caret"></b></a>
             <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                <li><a href='#' onclick='window.location="index.php?stat"' title='Lihat Statistik Dan Unduh'><img src='tampilan/gambar/donlot.png' width='22' height='22'> Statistik</a></li>
-                <li><a href='#' onclick='window.location="log.php"' title='Lihat Catatan Log / Aktivitas Pengguna'><img src='tampilan/gambar/log.png' width='22' height='22'> Aktivitas</a></li>
-                <li><a href='#' onclick='window.location="kas.php"' title='Lihat Catatan Kas'><img src='tampilan/gambar/cal.png' width='22' height='22'> Catatan Kas</a></li>
-                <li><a href='#' onclick='window.location="siswa.php"' title='Lihat Data Siswa'><img src='tampilan/gambar/wong.png' width='22' height='22'> Siswa</a></li>
-                <li><a href='#' onclick='window.location="backup.php"' title='Backup Restore Database'><img src='tampilan/gambar/database.png' width='22' height='22'> Database</a></li>
-                <li><a href='#' onclick='window.location="atur.php"' title='Pengaturan'><img src='tampilan/gambar/gir.png' width='22' height='22'> Pengaturan</a></li>
+                <li><a href='#' onclick='window.location="index.php?stat"' title='Lihat Statistik Dan Unduh'><i class="icon-tasks"></i> Statistik</a></li>
+                <li><a href='#' onclick='window.location="log.php"' title='Lihat Catatan Log / Aktivitas Pengguna'><i class="icon-list-alt"></i> Aktivitas</a></li>
+                <li><a href='#' onclick='window.location="kas.php"' title='Lihat Catatan Kas'><i class="icon-shopping-cart"></i> Catatan Kas</a></li>
+                <li><a href='#' onclick='window.location="anggota.php"' title='Lihat Data Siswa'><i class="icon-user"></i> Anggota</a></li>
+                <li><a href='#' onclick='window.location="backup.php"' title='Backup Restore Database'><i class="icon-hdd"></i> Database</a></li>
+                <li><a href='#' onclick='window.location="atur.php"' title='Pengaturan'><i class=" icon-wrench"></i> Pengaturan</a></li>
             </ul>
         </li>        
         <li class="divider-vertical"></li>      
@@ -83,7 +83,7 @@ cek_user();
                     <li class="divider-vertical"></li>
 		    <li class="dropdown">
 			<a class="dropdown-toggle" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="/page.html">
-			    <?php echo $_SESSION['nama']; ?>
+			    <i class='icon-user'></i> <?php echo $_SESSION['nama']; ?>
 			    <b class="caret"></b>
 			  </a>
 			  <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">

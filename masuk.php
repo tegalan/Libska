@@ -5,22 +5,29 @@ File: masuk.php
 Fungsi: Form untuk login.
 Auth: ShowCheap
 */
+if(file_exists("upgrade/index.php")){
+    header('location: upgrade/index.php');
+    exit(0);
+}
 require 'sistem/config.php';
 $pencet=$_POST['tmbl'];
 sambung();
-if(isset($_SESSION['nama'])){
-    header('location: index.php');
+if(isset($_SESSION['level'])){
+   $sesi=$_SESSION['level'];    
+    if(($sesi=='Admin' || $sesi=='Pustakawan')){
+        header('location: index.php');
+    }
 }
 $nama=mysql_real_escape_string($_POST['nama']);
 $kunci=md5($_POST['kunci']);
 if ($pencet != '' && $nama != '' && $kunci != ''){
-    $s=mysql_query("select * from anggota where user='".$nama."' and kunci='".$kunci."'");
+    $s=mysql_query("SELECT * FROM tbl_pustakawan WHERE user='".$nama."' AND kunci='".$kunci."'");
     $c=mysql_num_rows($s);
     if($c == '1'){
       $t= mysql_fetch_array($s);
       $log=$t['login'];
       $log=$log+1;
-      mysql_query("update anggota set login='$log' where user='$nama'");
+      mysql_query("UPDATE tbl_pustakawan SET login='$log' WHERE user='$nama'");
       $_SESSION['nama']=$t['nama'];
       $_SESSION['level']=$t['level'];
       $_SESSION['uid']=$t['id'];

@@ -5,6 +5,18 @@ File: index.php
 Fungsi: Resepsionis :D
 Auth: ShowCheap
 */
+
+//Chek Upgrade Dir
+if(file_exists("upgrade/index.php") && $_GET['upgrade']!='selesai'){
+    header('location: upgrade/index.php');
+    exit(0);
+}elseif($_GET['upgrade']=='selesai'){
+    if(rename("upgrade","upgrade_finish")){
+        
+    }else{
+        echo "Failed remove Dir upgrade";
+    }
+}
 include 'sistem/config.php';
 //include 'run.php';
 sambung();
@@ -58,13 +70,13 @@ if(isset($_GET['stat'])){
                 <td>No</td><td>Nama</td><td>Kelas</td><td>Jurusan</td><td>Peminjaman</td>
             </tr>
         </thead> 
-        <?php $i='1'; $ab=mysql_query("select * from siswa where count_pinjam !='0' order by count_pinjam DESC limit 0,50"); while($cde=mysql_fetch_array($ab)){ ?>
+        <?php $i='1'; $ab=mysql_query("SELECT * FROM tbl_anggota WHERE count !='0' AND kelas NOT LIKE 'Alumni%' ORDER BY count DESC limit 0,50"); while($cde=mysql_fetch_array($ab)){ ?>
             <tr>
                 <td><?php echo $i; ?></td>
                 <td><a title="Klik Untuk Melihat" href="peminjaman.php?pencarian=<?php echo $cde['no_induk']; ?>"><?php echo $cde['nama']; ?></a></td>
                 <td><?php echo $cde['kelas']; ?> </td>
                 <td><?php echo $cde['jurusan']; ?> </td>      
-                <td><?php echo $cde['count_pinjam']; ?> Kali</td>
+                <td><?php echo $cde['count']; ?> Kali</td>
             </tr>            
          <?php $i++; } ?>
       </table><!--Tabel anak2--> 
@@ -77,12 +89,12 @@ if(isset($_GET['stat'])){
                 <td>No</td><td>Judul Buku</td><td>Status</td><td>Di Pinjam</td>
             </tr>
         </thead>
-        <?php $popu=mysql_query("select * from buku where count_pinjam != '0' order by count_pinjam DESC limit 0,50"); $no='1'; while($pop=mysql_fetch_array($popu)){ ?>
+        <?php $popu=mysql_query("SELECT * FROM tbl_buku WHERE count != '0' ORDER BY count DESC LIMIT 0,50"); $no='1'; while($pop=mysql_fetch_array($popu)){ ?>
             <tr id='pop'>
                 <td><?php echo $no; ?></td>
                 <td><?php echo $pop['judul']; ?></td>
-                <td><?php echo $pop['status']; ?></td>
-                <td><?php echo $pop['count_pinjam']; ?> Kali</td>
+                <td><?php echo $pop['status']==1?"<span class='label label-success'>Tersedia</span>":"<span class='label label-important'>Dipinjam</span>"; ?></td>
+                <td><?php echo $pop['count']; ?> Kali</td>
             </tr>
             <?php $no++; } ?>   
         </table><!--Tabel anak-->
@@ -92,13 +104,13 @@ if(isset($_GET['stat'])){
         <table  class="table table-striped table-hover" width='100%' style='font-size: 12px; border: 1px inset;' cellspacing='1' cellpadding='2'>
           <thead>
             <tr align='center' style="font-weight: bold;">
-              <td>No</td><td>Kode Buku</td><td>Judul Buku</td><td>Peminjam</td><td>Tanggal</td>
+              <td>No</td><td>Kode Buku</td><td>Judul Buku</td><td>Peminjam</td><td width="100px">Tanggal</td>
             </tr>
           </thead>
           <?php
           $jatuh=new db();
           $saiki=sekarang();
-          $jatuh->sql("select * from tempo");
+          $jatuh->sql("SELECT * FROM tbl_telat");
           $jum=$jatuh->getJml();
           if($jum !='0'){
               $noer=1;
@@ -107,8 +119,8 @@ if(isset($_GET['stat'])){
                   echo "<td>$noer</td>";
                   echo "<td>".$jatuh->hasil['buku']."</td>";
                   echo "<td>".$jatuh->hasil['judul']."</td>";
-                  echo "<td>".$jatuh->hasil['siswa']."</td>";
-                  echo "<td>".$jatuh->hasil['tanggal']."</td>";
+                  echo "<td><a href='peminjaman.php?pencarian=".$jatuh->hasil['induk']."'>".$jatuh->hasil['siswa']."</a></td>";
+                  echo "<td>".date('d M Y', strtotime($jatuh->hasil['tanggal']))."</td>";
                   echo "</tr>";
                   $noer++;
               }

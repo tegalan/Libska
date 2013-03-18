@@ -12,7 +12,7 @@ get_kepala();
 
 $log=new db();
 if(isset($_GET['reset']) && isset($_SESSION['level'])){
-    $log->sql("truncate log");
+    $log->sql("TRUNCATE log");
     catat($_SESSION['nama'],"Menghapus Log/Aktivitas");
 }
 $lihat=mysql_real_escape_string($_GET['item']);
@@ -20,7 +20,7 @@ $tambah=$lihat+50;
 if($lihat==''){
     $lihat='100';
 }
-$log->sql("select * from log order by id ASC limit 0, $lihat");
+$log->sql("SELECT * FROM log ORDER BY id ASC LIMIT 0, $lihat");
 ?>
 <script type='text/javascript'>
     function reset(){

@@ -22,7 +22,7 @@ if($stat=='All'){
     $stat='%%';
 }
 if($stat==''){
-    $stat='Ada';
+    $stat='1';
 }
 if($bates==''){
     $bates='100';
@@ -36,8 +36,10 @@ if (!isset($hal)){
 }else{
     $mulai= $hal * $bts;
 };
-$a=mysql_query("select * from buku where $where like '%$key%' && status like '$stat' order by $order ASC");
-$semua=mysql_query("select * from buku");
+$a=mysql_query("SELECT * FROM tbl_buku WHERE $where LIKE '%$key%' && status LIKE '$stat' ORDER BY $order ASC");
+//Debug Program
+//echo "SELECT * FROM tbl_buku WHERE $where LIKE '%$key%' && status LIKE '$stat' ORDER BY $order ASC";
+$semua=mysql_query("SELECT * FROM tbl_buku");
 $semua=mysql_num_rows($semua);
 $jumlah=mysql_num_rows($a);
 $jhal=ceil($jumlah/$bts);
@@ -86,7 +88,7 @@ $jhal=ceil($jumlah/$bts);
 	$(this).removeData('modal');
       });
 </script>
-<h2>Katalog Buku <a href="buku.php?tambah=1" class="btn btn-info">Tambah</a></h2>
+<h2>Katalog Buku <a href="buku.php?tambah=1" class="btn btn-info"><i class=' icon-plus icon-white'> </i> Tambah</a> <a href="import/index.php?target=buku" class="btn btn-info"><i class=' icon-download-alt icon-white'> </i> Import Data</a></h2>
 <form id='cari' action='' method='GET' name='frm-buku'>
 <table style='background-color: #99ccff;' width='100%' cellpadding='3' cellspacing='1' class="table table-striped table-hover">
     <tr>
@@ -119,9 +121,9 @@ $jhal=ceil($jumlah/$bts);
 	</td>
 	<td>
 	    <select name='status' onchange='kirim()' style="width: 150px;">
-		    <option value='Ada'>--Status--</option>
-		    <option value='Ada'  <?php if($_GET['status']=='Ada'){ echo "selected='selected'";} ?>>Ada</option>
-		    <option value='Kosong'  <?php if($_GET['status']=='Kosong'){ echo "selected='selected'";} ?>>Di Pinjam</option>
+		    <option value='1'>--Status--</option>
+		    <option value='1'  <?php if($_GET['status']=='1'){ echo "selected='selected'";} ?>>Ada</option>
+		    <option value='0'  <?php if($_GET['status']=='0'){ echo "selected='selected'";} ?>>Di Pinjam</option>
 		    <option value='All'  <?php if($_GET['status']=='All'){ echo "selected='selected'";} ?>>Semua</option>
 	    </select>
 	</td>
@@ -157,17 +159,22 @@ $jhal=ceil($jumlah/$bts);
     
 <?php
 sambung();
-$a=mysql_query("select * from buku where $where like '%$key%' && status like '$stat' order by $order ASC limit $mulai, $bts");
+$a=mysql_query("SELECT * FROM tbl_buku WHERE $where LIKE '%$key%' && status LIKE '$stat' ORDER BY $order ASC LIMIT $mulai, $bts");
+//Debug Program
+//echo "SELECT * FROM tbl_buku WHERE $where LIKE '%$key%' && status LIKE '$stat' ORDER BY $order ASC LIMIT $mulai, $bts";
 $no=1;
-$chek=@mysql_num_rows($a);
+$chek=mysql_num_rows($a);
 if($chek==1){
   ?>
   <script type="text/javascript">
-    $('#tmbl-pinjam').trigger('click');
+    $(document).ready(function(){
+        $('#tmbl-pinjam').click();
+    })
+    
   </script>
   <?php
 }
-while ($m=@mysql_fetch_array($a)){
+while ($m=mysql_fetch_array($a)){
     
     if($chek=='1' && $m['status'] != 'Kosong'){
     $judulku=addslashes($m['judul']);
@@ -212,17 +219,17 @@ echo "<tr>";
     
     ?>
                 <div class="btn-group">
-		    <?php if($m['status']=='Ada'){ ?>
+		    <?php if($m['status']=='1'){ ?>
                     <button id="tmbl-pinjam" class="btn btn-success tmbl-pinjam" data-toggle="modal" href="ajax/ajax-pinjam.php?buku=<?php echo $m['kd_buku'] ?>" data-target="#pop-pinjam" >Pinjam</button>
 		    <?php }else{ ?>
 		    <button class="btn btn-danger tmbl-pinjam" data-toggle="modal" data-target="#pop-nopinjam">Pinjam</button>
 		    <?php } ?>
-                    <button class="btn dropdown-toggle btn-success" data-toggle="dropdown" style="height:31px;">
+                    <button class="btn dropdown-toggle btn-success" data-toggle="dropdown">
                       <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
                         <li><a href='buku.php?tambah=1&hapus=1&buku=<?php echo $m['kd_buku'] ?>' title='Hapus Buku' onclick='return confirm("Yakin Hapus Buku Ini?");'>Hapus</a></li>
-                        <li><a href='buku.php?tambah=1&tBuku=<?php echo $m['kd_buku']; ?>' title='Tambah Buku Sejenis' onclick='return confirm(\"Tambah Buku?\");'>Tambah</a></li>
+                        <li><a href='buku.php?tambah=1&tBuku=<?php echo $m["kd_buku"]; ?>' title='Tambah Buku Sejenis' onclick='return confirm("Tambah Buku?");'>Tambah</a></li>
                     </ul>
               </div>
     <?php

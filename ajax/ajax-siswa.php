@@ -3,7 +3,7 @@ require '../sistem/config.php';
 sambung();
 $induk=mysql_real_escape_string($_POST['siswo']);
 $siswa=new db();
-$siswa->sql("select * from siswa where no_induk = '$induk'");
+$siswa->sql("SELECT * FROM tbl_anggota WHERE no_induk = '$induk'");
 $siswa->hasil();
 ?>
 <table cellpadding='1' cellspacing='3' id="tabel_ajax">

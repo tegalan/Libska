@@ -16,25 +16,25 @@ $siswa=$_GET["siswa"];
 $member=new siswa();
 $member->setInduk($siswa);
 //Set query daftar yang di pinjam
-$sql=mysql_query("SELECT * FROM pinjaman WHERE siswa=\"$siswa\" AND kembali=\"0\"");
+$sql=mysql_query("SELECT * FROM tbl_peminjaman WHERE siswa=\"$siswa\" AND kembali=\"0\"");
 //buku belum kembali
 $belum=mysql_num_rows($sql);
 
 //jika fungsi mengembalikan satu satu
 if($_GET["kembali"]=="satu"){
     $pinjam=$_GET["tgl_pinjam"];
-    $kembaline=sekarang();
+    $kembaline=date('Y-m-d');
     $siswa=$_GET["siswa"];
     $buku=$_GET["buku"];
     
-    $kmb=mysql_query("UPDATE pinjaman SET kembali='1', kembaline='$kembaline' WHERE siswa='$siswa' && buku='$buku' && tgl_pinjam='$pinjam'");
-    $buk=mysql_query("UPDATE buku SET status='Ada', peminjam='0' WHERE peminjam='$siswa' && kd_buku='$buku'");
+    $kmb=mysql_query("UPDATE tbl_peminjaman SET kembali='1', tgl_kembali='$kembaline' WHERE siswa='$siswa' && buku='$buku' && tgl_pinjam='$pinjam'");
+    $buk=mysql_query("UPDATE tbl_buku SET status='1', peminjam='0' WHERE peminjam='$siswa' && kd_buku='$buku'");
     if($kmb && $buk){
         $obuku=new buku();
         $osiswa=new siswa();
         $obuku->setKode($buku);
         $osiswa->setInduk($siswa);
-        $s=mysql_query("DELETE FROM tempo WHERE buku='$buku'");
+        $s=mysql_query("DELETE FROM tbl_telat WHERE buku='$buku'");
         if($s){
             //echo "hapused";
         }else{
@@ -53,13 +53,13 @@ if($_GET["kembali"]=="all"){
     $osiswa=new siswa();
     $osiswa->setInduk($siswa);
     
-    $kmb=mysql_query("UPDATE pinjaman SET kembali='1', kembaline='$kembaline' WHERE siswa='$siswa' && kembali='0'");
-    $buk=mysql_query("update buku set status='Ada', peminjam='0' where peminjam='$siswa'");
+    $kmb=mysql_query("UPDATE tbl_peminjaman SET kembali='1', tgl_kembali='$kembaline' WHERE siswa='$siswa' && kembali='0'");
+    $buk=mysql_query("UPDATE tbl_buku SET status='1', peminjam='0' WHERE peminjam='$siswa'");
     //echo "UPDATE pinjaman SET kembali='1', kembaline='$kembaline' WHERE siswa='$siswa' && kembali='0' <br>";
     //echo "update buku set status='Ada', peminjam='0' where peminjam='$siswa' <br>";
     //$tempo=
     if($kmb && $buk){
-        $c=mysql_query("DELETE FROM tempo WHERE induk ='$siswa'");
+        $c=mysql_query("DELETE FROM tbl_telat WHERE induk ='$siswa'");
         if($c){
             //echo "Di Busek";
         }else{
@@ -96,12 +96,17 @@ if($_GET["kembali"]=="all"){
         </tr>
     </thead>
     <tbody id="tbody">
-    <?php $id=1; while($d=mysql_fetch_array($sql)){ ?>
+    <?php 
+        $id=1; 
+        $book=new buku();
+        while($d=mysql_fetch_array($sql)){ 
+            $book->setKode($d["buku"]);
+    ?>
        <tr class="item" id="row-<?php echo $id; ?>">
             <td><?php echo $d["buku"]; ?></td>
-            <td><?php echo $d["judul"]; ?></td>
+            <td><?php echo $book->getJudul(); ?></td>
             <td><?php echo $d["tgl_pinjam"]; ?></td>
-            <td><?php echo $d["tgl_kembali"]; ?></td>
+            <td><?php echo $d["tgl_tempo"]; ?></td>
             <td><a class="btn btn-primary" href="javascript:kembali(<?php echo "'".$id."','".$d["tgl_pinjam"]."','".$member->getInduk()."','".$d["buku"]."'"; ?>)">Kembali</a></td>
         </tr>
     <?php $id++; } ?>

@@ -15,8 +15,8 @@ if(isset($_POST['tombol']) && isset($_SESSION['nama'])){
     $val=mysql_real_escape_string($_POST['val']);
     $ket=mysql_real_escape_string($_POST['ket']);
     $type=$_POST['jenis'];
-    $skg=sekarang();
-    $sal_akhr=$kas->single("select saldo from kas order by id DESC limit 0,1");
+    $skg=date('Y-m-d');
+    $sal_akhr=$kas->single("SELECT saldo FROM tbl_kas ORDER by id DESC LIMIT 0,1");
     if($type=='keluar'){
         $saldo=$sal_akhr - $val;
         $cat="Pengeluaran";
@@ -25,7 +25,7 @@ if(isset($_POST['tombol']) && isset($_SESSION['nama'])){
         $cat="Pemasukkan";
     }
     catat($_SESSION['nama'], "$cat sejumlah $val");
-    mysql_query("insert into kas set $type = '$val', tgl = '$skg', ket='$ket', saldo='$saldo'");
+    mysql_query("INSERT INTO tbl_kas SET $type = '$val', tgl = '$skg', ket='$ket', saldo='$saldo'");
 }
 ?>
 <script type='text/javascript'>
@@ -78,13 +78,13 @@ function uang(num) {
     <?php
     $hel= new db();
     $bts= 50;
-    $jumlah=$hel->baris("select * from kas");
+    $jumlah=$hel->baris("SELECT * FROM tbl_kas");
     $jhal=ceil($jumlah/$bts);
     $hal=$jhal-1;
     $mulai= $hal * $bts;
     
     
-    $kas->sql("select * from kas limit $mulai, $bts");
+    $kas->sql("SELECT * FROM tbl_kas LIMIT $mulai, $bts");
     $no=1;
     while($kas->hasil()){
         echo "<tr style='background-color: #E1E1E1;'>";
@@ -98,11 +98,11 @@ function uang(num) {
         $no++;
     }
     ?>
-<tr style='background-color: gray; color: silver;'>
+<tr style='background-color: gray; color: black;'>
     <td colspan='3' align='center'>Total</td>
-    <td align='right'><script type='text/javascript'>document.write(uang(<?php echo $mas=@$kas->single("select sum(masuk) from kas"); ?>))</script></td>
-    <td align='right'><script type='text/javascript'>document.write(uang(<?php echo $kel=@$kas->single("select sum(keluar) from kas"); ?>))</script></td>
-    <td align='right'><b><script type='text/javascript'>document.write(uang(<?php echo $mas-$kel; ?>))</script></b></td>
+    <td align='right'>Rp.<script type='text/javascript'>document.write(uang(<?php echo $mas=@$kas->single("SELECT sum(masuk) FROM tbl_kas"); ?>))</script></td>
+    <td align='right'>Rp.<script type='text/javascript'>document.write(uang(<?php echo $kel=@$kas->single("SELECT sum(keluar) FROM tbl_kas"); ?>))</script></td>
+    <td align='right'><b>Rp.<script type='text/javascript'>document.write(uang(<?php echo $mas-$kel; ?>))</script></b></td>
 </tr>
 </table>
 

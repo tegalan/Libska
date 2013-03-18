@@ -5,10 +5,10 @@ Fungsi: Library Fungsi
 Auth: ShowCheap
 */
 function catat($us,$text){
-    $now=sekarang()." ".date('H:i');
+    $now=date("Y-m-d H:i:s");
     $peng=mysql_real_escape_string($us);
     $aksi=mysql_real_escape_string($text);
-        $insert=mysql_query("insert into log set user = '$peng', aksi = '$aksi', tgl = '$now'");
+        $insert=mysql_query("INSERT INTO log SET user = '$peng', aksi = '$aksi', tgl = '$now'");
         if($insert){
             
         }else{
@@ -97,6 +97,7 @@ function admin($text){
 }
 
 function tanggal($tgl="10 Mei 1993"){
+    $cek=trim($tgl);
     $val=explode(' ',$tgl);
     $tg=$val['0'];
     $b=$val['1'];
@@ -107,8 +108,14 @@ function tanggal($tgl="10 Mei 1993"){
         $b=$i+1;
         }
     }
-    $tgl="$tg/$b/$th";
-    return $tgl;
+    $bl=  sprintf('%02d',$b);
+    $tgl="$th-$bl-$tg";
+    if($cek!="" || $cek!=null){
+        return $tgl;
+    }else{
+        return "0000-00-00";
+    }
+    
 }
 
 function hitung_hari($h='1', $b='1', $t='2012', $h2='1', $b2='1', $t2='2012'){
@@ -256,27 +263,39 @@ class exel{
     }
 }
 function getVersion(){
-    return "3.0.0";
+    return "3.1.0-Beta";
 }
 
 function get_sistem($opt){
-    $sql=mysql_query("select * from sistem where param='$opt'");
+    $sql=mysql_query("SELECT * FROM tbl_config WHERE param='$opt'");
     $q=@mysql_fetch_array($sql);
     
     return $q['value'];
 }
 
 function set_sistem($inpt, $val){
-    $s=mysql_query("update sistem set value='$val' where param='$inpt'");
+    $s=mysql_query("UPDATE tbl_config SET value='$val' WHERE param='$inpt'");
     if(!$s){
         echo "<script type='text/javascript'>alert(\"Gagal Menyimpan  Konfigurasi\")</script>";
     }
 }
 //31 Jul 2012
 function get_nama($id){
-    $s=mysql_query("select * from siswa where no_induk=\"$id\"");
+    $s=mysql_query("SELECT * FROM tbl_anggota WHERE no_induk=\"$id\"");
     $r=mysql_fetch_array($s);
     
     return $r["nama"];
+}
+function get_pustakawan($id){
+    $s=  mysql_query("SELECT * FROM tbl_pustakawan WHERE id=\"$id\"");
+    $r= mysql_fetch_array($s);
+    
+    return $r['nama'];
+}
+function id_pustakawan($nama){
+    $s=  mysql_query("SELECT id FROM anggota WHERE nama=\"$nama\"");
+    $r= mysql_fetch_array($s);
+    
+    return $r['id'];
 }
 ?>

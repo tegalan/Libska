@@ -5,7 +5,7 @@ Auth: ShowCheap
 Site: http://www.sucipto.net
 */
 body{
-    background: url(gambar/bg.png);
+    background: url(gambar/bg_dotted.png);
 }
 input#in-siswa[type='text']{
     border: 2px hidden;

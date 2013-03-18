@@ -14,14 +14,15 @@ $kepala=array();
         $lb=$_GET["bul"];
         $teh=$_GET["thn"];
         if($lb==''){
-            $lb=sekarang(bln);
+            $lb=date('m');
         }
         if($teh==''){
             $teh=date('Y');
         }
 //echo $teh;
 function kep($kep, $hr, $bul, $thn){
-    $q=mysql_query("select * from pinjaman where tgl_pinjam like '$hr%' AND buku like '$kep%' AND tgl_pinjam like '%$bul%' AND tgl_pinjam like '%$thn'");
+    $q=mysql_query("SELECT * FROM tbl_peminjaman WHERE tgl_pinjam LIKE '%$hr' AND buku LIKE '$kep%' AND tgl_pinjam LIKE '%-$bul-%' AND tgl_pinjam LIKE '$thn%'");
+//    echo "SELECT * FROM tbl_peminjaman WHERE tgl_pinjam LIKE '%$hr' AND buku LIKE '$kep%' AND tgl_pinjam LIKE '%-$bul-%' AND tgl_pinjam LIKE '$thn%'";
     $r= mysql_num_rows($q);
     return $r;
 }
@@ -36,10 +37,10 @@ $jum=count($indo)-1;
             
             for($bb=0; $bb<=$jum; $bb++){
                 $pilih=null;
-                    if($lb==$indo[$bb]){
+                    if($lb==$bb+1){
                         $pilih="selected=selected";
                     }
-                echo "<option $pilih>".$indo[$bb]."</option>";
+                echo "<option $pilih value='".($bb+1)."'>".$indo[$bb]."</option>";
         }  
         ?>
     </select>
@@ -58,7 +59,7 @@ $jum=count($indo)-1;
         ?>
     </select>
 </form>
-Menampilkan Data Bulan <b><?php echo $lb." ".$teh; ?></b>
+Menampilkan Data Bulan <b><?php echo $indo[$lb-1]." ".$teh; ?></b>
 
 <table width='100%' border='1' cellspacing='0'>
     <tr style='background-color: #3366ff; color: #703C3C; font-weight: bold;'>
@@ -75,15 +76,17 @@ Menampilkan Data Bulan <b><?php echo $lb." ".$teh; ?></b>
         
         $row=array();
         $tot=array(0,0,0,0,0,0,0,0,0,0,0);
-        for($k=1; $k<=31; $k++){
+        $jumlah_hari=cal_days_in_month(CAL_GREGORIAN, $lb, date('Y'));
+        for($k=1; $k<=$jumlah_hari; $k++){
             $ka=sprintf("%02s", $k);
             //echo $ka."<br>";
+            $lb=sprintf("%02s", $lb);
             ?>
             
             
             <tr class='brum'>
                 
-                <td align='center' style='background-color: #EF9D30'><?php echo "$ka $lb"; ?></td>
+                <td align='center' style='background-color: #EF9D30'><?php echo "$ka ".$indo[$lb-1]; ?></td>
                 <td align='center' id='ganjil'><?php echo $row[0]=kep(0,$ka,$lb,$teh); $tot[0]=$tot[0]+$row[0] ?></td>
                 <td align='center' id='genap'><?php echo $row[1]=kep(1,$ka,$lb,$teh); $tot[1]=$tot[1]+$row[1] ?></td>
                 <td align='center' id='ganjil'><?php echo $row[2]=kep(2,$ka,$lb,$teh); $tot[2]=$tot[2]+$row[2]  ?></td>

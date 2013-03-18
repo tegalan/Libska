@@ -7,6 +7,7 @@ Auth: ShowCheap
 */
 
 require 'sistem/config.php';
+require 'sistem/class_buku.php';
 sambung();
 get_kepala();
 cek_user();
@@ -14,7 +15,7 @@ cek_user();
 
 
 /*Ambil Perintah*/
-$cari=$_GET['pencarian'];
+$cari=trim($_GET['pencarian']);
 $where=$_GET['where'];
 $kd_buku=$_GET['kmb'];
 if($where==''){
@@ -27,7 +28,7 @@ $kmbl=$_GET['kembali'];
 $kembaline=$_GET['kembali'];
 
 if($kmbl==''){
-    $kmbl='0';
+    $kmbl='%%';
 }
 if($kmbl=='all'){
     $kmbl='%%';
@@ -57,36 +58,36 @@ if($_GET['tahun']!=''){
 }else{
     $th='';
 }
-$jajal="$t $b $th";
+$jajal="$th-$b-$t";
 //End tglblnthn
 
-$dari=mysql_query("select * from pinjaman");
+$dari=mysql_query("SELECT * FROM tbl_peminjaman");
 $dari=mysql_num_rows($dari);
-$belum=mysql_query("select * from pinjaman where kembali='0'");
+$belum=mysql_query("SELECT * FROM tbl_peminjaman WHERE kembali='0'");
 $belum=mysql_num_rows($belum);
 
 
 /*Lunasi dendo*/
 if($_GET['denda']=='lunas'){
-    $hapus=mysql_query("update siswa set denda='0' where no_induk='$cari'");
+    $hapus=mysql_query("UPDATE tbl_anggota SET denda='0' WHERE no_induk='$cari'");
     
     if($val!='0'){
         $val=$_GET['tot'];
-        $skg=sekarang();
+        $skg=date("Y-m-d");
         $kas=new db();
-        $sal_akhr=$kas->single("select saldo from kas order by id DESC limit 0,1");
+        $sal_akhr=$kas->single("SELECT saldo FROM tbl_kas ORDER BY id DESC limit 0,1");
         $saldo=$sal_akhr+$val;
         $convert=get_nama($cari);
-        mysql_query("insert into kas set masuk = '$val', tgl = '$skg', ket='Denda dari $convert', saldo='$saldo'"); 
+        mysql_query("INSERT INTO tbl_kas SET masuk = '$val', tgl = '$skg', ket='Denda dari $convert', saldo='$saldo'"); 
     }
-        if($hapus){
-            catat($_SESSION['nama'],"Denda Lunas dari $cari");
-            echo "<script type='text/javascript'>alert('Denda Lunasss !!')</script>";
-            echo "<script type='text/javascript'>window.location='peminjaman.php?pencarian=".$cari."'</script>";
-        }
+    if($hapus){
+        catat($_SESSION['nama'],"Denda Lunas dari $cari");
+        echo "<script type='text/javascript'>alert('Denda Lunasss !!')</script>";
+        echo "<script type='text/javascript'>window.location='peminjaman.php?pencarian=".$cari."'</script>";
+    }
         
 }elseif($_GET['denda']=='batal'){
-    $hapus=mysql_query("update siswa set denda='0' where no_induk='$cari'");
+    $hapus=mysql_query("UPDATE tbl_anggota SET denda='0' WHERE no_induk='$cari'");
     if($hapus){
         catat($_SESSION['nama'],"Membatalkan Denda dari $convert");
     }
@@ -100,19 +101,19 @@ if($_POST['denda'] && $_POST['tempo'] != ''){
     $value= denda($tempo, $sucip);
     $cval=substr($value,0,1);
     if($cval!='-'){
-        mysql_query("update siswa set denda ='$value' where no_induk='$cari'");
+        mysql_query("UPDATE tbl_anggota SET denda ='$value' WHERE no_induk='$cari'");
         catat($_SESSION['nama'],"Set Denda $cari -> $value");
     }
 }
 
 /*Kembali Semua*/
-$tgl_kembali=sekarang();
+$tgl_kembali=date("Y-m-d");
 if(isset($_POST['semua'])){
-    $kmb=mysql_query("update pinjaman set kembali='1', kembaline='$tgl_kembali' where siswa='$cari' && kembali='0'");
-    $buk=mysql_query("update buku set status='Ada', peminjam='0' where peminjam='$cari'");
+    $kmb=mysql_query("UPDATE tbl_peminjaman SET kembali='1', tgl_kembali='$tgl_kembali' WHERE siswa='$cari' && kembali='0'");
+    $buk=mysql_query("UPDATE tbl_buku SET status='1', peminjam='0' WHERE peminjam='$cari'");
     //$tempo=
     if($kmb && $buk){
-        $c=mysql_query("delete from tempo where induk ='$cari'");
+        $c=mysql_query("DELETE FROM tbl_telat WHERE induk ='$cari'");
         if($c){
             //echo "Di Busek";
         }else{
@@ -134,11 +135,11 @@ if(isset($_POST['semua'])){
 /*Kembali Satu2*/
 if(isset($_GET['kmb'])){
     $tgl_kmbl=$_GET["tgl_pinjem"];
-    $kmb=mysql_query("update pinjaman set kembali='1', kembaline='$tgl_kembali' where siswa='$cari' && buku='$kd_buku' && tgl_pinjam='$tgl_kmbl'");
-    $buk=mysql_query("update buku set status='Ada', peminjam='0' where peminjam='$cari' && kd_buku='$kd_buku'");
+    $kmb=mysql_query("UPDATE tbl_peminjaman SET kembali='1', tgl_kembali='$tgl_kembali' WHERE siswa='$cari' && buku='$kd_buku' && tgl_pinjam='$tgl_kmbl'");
+    $buk=mysql_query("UPDATE tbl_buku SET status='1', peminjam='0' WHERE peminjam='$cari' && kd_buku='$kd_buku'");
     //$tempo=
     if($kmb && $buk){
-        $s=mysql_query("delete from tempo where buku='$kd_buku'");
+        $s=mysql_query("DELETE FROM tbl_telat WHERE buku='$kd_buku'");
         if($s){
             //echo "hapused";
         }else{
@@ -149,9 +150,9 @@ if(isset($_GET['kmb'])){
 }
 /*Ambil Peminjam*/
 if($cari != '' && $where=='siswa'){
-    $pem=mysql_query("select * from siswa where no_induk = $cari");
-    $si=@mysql_fetch_array($pem);
-    $hisi=@mysql_num_rows($pem);
+    $pem=mysql_query("SELECT * FROM tbl_anggota WHERE no_induk = $cari");
+    $si=mysql_fetch_array($pem);
+    $hisi=mysql_num_rows($pem);
 }
 
 //**Page**//
@@ -166,8 +167,8 @@ if (!isset($hal)){
 }else{
     $mulai= $hal * $bts;
 };
-$sql=mysql_query("select * from pinjaman where $where like '%$cari%' && kembali like '$kmbl'");
-$semua=mysql_query("select * from pinjaman");
+$sql=mysql_query("SELECT * FROM tbl_peminjaman WHERE $where LIKE '%$cari%' && kembali LIKE '$kmbl'");
+$semua=mysql_query("SELECT * FROM tbl_peminjaman");
 $semua=mysql_num_rows($semua);
 $jumlah=mysql_num_rows($sql);
 $jhal=ceil($jumlah/$bts);
@@ -176,17 +177,18 @@ $jhal=ceil($jumlah/$bts);
 /*Ambil Data Peminjaman*/
 
 if($_GET['tanggal']=='' && $_GET['bulan']=='' && $_GET['tahun']==''){
-    $jajal='';
+$jajal='';
 }elseif($_GET['tanggal']==''){
-    $jajal="$b $th";
+    $jajal=  trim("$th-$b");
 }elseif($_GET['bulan']==''){
-    $jajal="$t ".sekarang(bln)." $th";
+    $jajal=  trim("$th-".date('m')."-$t");
 }
 
-$sql=mysql_query("select * from pinjaman where $where like '%$cari%' && kembali like '$kmbl' && tgl_pinjam like '%$jajal%' order by siswa ASC limit $mulai, $bts");
+$sql=mysql_query("SELECT *, DATE_FORMAT( tgl_pinjam,  '%d %M %Y' ) AS format_pinjam, DATE_FORMAT( tgl_tempo,  '%d %M %Y' ) AS format_tempo, DATE_FORMAT( tgl_kembali,  '%d %M %Y' ) AS format_kembali FROM tbl_peminjaman WHERE $where LIKE '%$cari%' && kembali LIKE '$kmbl' && tgl_pinjam LIKE '%$jajal%' ORDER BY siswa ASC limit $mulai, $bts");
+//echo "SELECT *, DATE_FORMAT( tgl_pinjam,  '%d %M %Y' ) AS format_pinjam, DATE_FORMAT( tgl_tempo,  '%d %M %Y' ) AS format_tempo, DATE_FORMAT( tgl_kembali,  '%d %M %Y' ) AS format_kembali FROM tbl_peminjaman WHERE $where LIKE '%$cari%' && kembali LIKE '$kmbl' && tgl_pinjam LIKE '%$jajal%' ORDER BY siswa ASC limit $mulai, $bts";
 $ht=mysql_num_rows($sql);
 //
-$sqll=mysql_query("select * from pinjaman where $where like '%$cari%' && kembali like '$kmbl' && tgl_pinjam like '%$jajal%' order by siswa");
+$sqll=mysql_query("SELECT * FROM tbl_peminjaman WHERE $where LIKE '%$cari%' && kembali LIKE '$kmbl' && tgl_pinjam LIKE '%$jajal%' ORDER BY siswa");
 $ht2=mysql_num_rows($sqll);
 
 ?>
@@ -226,9 +228,9 @@ $ht2=mysql_num_rows($sqll);
                     <option value='buku' <?php if($_GET['where']=='buku'){ echo "selected='selected'"; } ?>>Buku</option>
                 </select>
                 <select name='kembali' onchange='kirim()'  style="width: 150px">
+                    <option value='all' <?php if($_GET['kembali']=='all'){ echo "selected='selected'";} ?>>Semua</option> 
                     <option value='0' <?php if($_GET['kembali']=='0'){ echo "selected='selected'";} ?>>Belum Kembali</option>
                     <option value='1' <?php if($_GET['kembali']=='1'){ echo "selected='selected'";} ?>>Kembali</option>
-                    <option value='all' <?php if($_GET['kembali']=='all'){ echo "selected='selected'";} ?>>Semua</option> 
                 </select>
                 <select name='banyak' onchange='kirim()'  style="width: 70px">
                     <option value='5'>5</option>
@@ -260,18 +262,18 @@ $ht2=mysql_num_rows($sqll);
                 </select>
                 <select name='bulan' onchange='kirim()'  style="width: 120px">
                     <option value=''>Bulan</option>
-                    <option <?php if($_GET['bulan']=='Januari'){ echo "selected='selected'";} ?>>Januari</option>
-                    <option <?php if($_GET['bulan']=='Pebruari'){ echo "selected='selected'";} ?>>Pebruari</option>
-                    <option <?php if($_GET['bulan']=='Maret'){ echo "selected='selected'";} ?>>Maret</option>
-                    <option <?php if($_GET['bulan']=='April'){ echo "selected='selected'";} ?>>April</option>
-                    <option <?php if($_GET['bulan']=='Mei'){ echo "selected='selected'";} ?>>Mei</option>
-                    <option <?php if($_GET['bulan']=='Juni'){ echo "selected='selected'";} ?>>Juni</option>
-                    <option <?php if($_GET['bulan']=='Juli'){ echo "selected='selected'";} ?>>Juli</option>
-                    <option <?php if($_GET['bulan']=='Agustus'){ echo "selected='selected'";} ?>>Agustus</option>
-                    <option <?php if($_GET['bulan']=='September'){ echo "selected='selected'";} ?>>September</option>
-                    <option <?php if($_GET['bulan']=='Oktober'){ echo "selected='selected'";} ?>>Oktober</option>
-                    <option <?php if($_GET['bulan']=='Nopember'){ echo "selected='selected'";} ?>>Nopember</option>
-                    <option <?php if($_GET['bulan']=='Desember'){ echo "selected='selected'";} ?>>Desember</option>
+                    <option value="01" <?php if($_GET['bulan']=='01'){ echo "selected='selected'";} ?>>Januari</option>
+                    <option value="02" <?php if($_GET['bulan']=='02'){ echo "selected='selected'";} ?>>Pebruari</option>
+                    <option value="03" <?php if($_GET['bulan']=='03'){ echo "selected='selected'";} ?>>Maret</option>
+                    <option value="04" <?php if($_GET['bulan']=='04'){ echo "selected='selected'";} ?>>April</option>
+                    <option value="05" <?php if($_GET['bulan']=='05'){ echo "selected='selected'";} ?>>Mei</option>
+                    <option value="06" <?php if($_GET['bulan']=='06'){ echo "selected='selected'";} ?>>Juni</option>
+                    <option value="07" <?php if($_GET['bulan']=='07'){ echo "selected='selected'";} ?>>Juli</option>
+                    <option value="08" <?php if($_GET['bulan']=='08'){ echo "selected='selected'";} ?>>Agustus</option>
+                    <option value="09" <?php if($_GET['bulan']=='09'){ echo "selected='selected'";} ?>>September</option>
+                    <option value="10" <?php if($_GET['bulan']=='10'){ echo "selected='selected'";} ?>>Oktober</option>
+                    <option value="11" <?php if($_GET['bulan']=='11'){ echo "selected='selected'";} ?>>Nopember</option>
+                    <option value="12" <?php if($_GET['bulan']=='12'){ echo "selected='selected'";} ?>>Desember</option>
                 </select>
                 <select name='tahun' onchange='kirim()'  style="width: 100px">
                 <option value=''>Tahun</option>
@@ -297,8 +299,38 @@ $ht2=mysql_num_rows($sqll);
             </form>            
         </td>
     </tr>
-    
-    <?php if($hisi=='1' && $_GET['kembali']=="0" && $ht!='0'){ //jika siswa di temukan 1?>
+    <tr align='center'>
+        <td width='30'>No.</td>
+        <td width='50'>Peminjam</td>
+        <td>Kode</td>
+        <td>Judul</td>
+        <td>Tgl. Pinjam</td>
+        <td>Jatuh Tempo</td>
+        <td>Tgl. Kembali</td>
+        <td>Status</td> 
+    </tr>
+    </thead>
+    <?php $book=new buku(); ?>
+    <?php $i=1; $kembali=0; while($p=mysql_fetch_array($sql)){
+        $book->setKode($p['buku']);
+        
+        if($p['kembali']==0){
+            $kembali++;
+        }
+    ?>  
+        <tr>
+            <td><?php echo $i ?></td>
+            <td><a class="list" href='#' onclick='window.location="?pencarian=<?php echo $p['siswa']; ?>&where=siswa&kembali=all<?php //echo $kembaline; ?>"' title='Klik Untuk Detail'><?php echo $p['siswa']; ?></a></td>
+            <td><a class="list" onclick='window.location="?pencarian=<?php echo $p['siswa']; ?>&where=siswa&kembali=all<?php //echo $kembaline; ?>"' href="#"><?php echo $p['buku']; ?></a></td>
+            <td><a class="list" onclick='window.location="?pencarian=<?php echo $p['siswa']; ?>&where=siswa&kembali=all<?php //echo $kembaline; ?>"' href="#"><?php echo $book->getJudul(); ?></a></td>
+            <td><?php echo $p['format_pinjam']; ?></td>
+            <td><b><?php echo $p['format_tempo']; ?></b></td>
+            <td><?php echo $p['tgl_kembali']=="0000-00-00" ? "-": $p['format_kembali']?></td>
+            <td><?php echo $p['kembali']==0?"<span class='label label-important'>Belum Kembali</span>":"<span class='label label-info'>Sudah Kembali</span>";?></td>
+                   
+        </tr>
+    <?php $i++; } ?>
+    <?php if($hisi=='1' && $kembali!=0 && $ht!='0'){ //jika siswa di temukan 1?>
         <script type="text/javascript">$('#detail-pinjam').modal('show');</script>
         <script type="text/javascript">
                    $.ajax({
@@ -311,30 +343,6 @@ $ht2=mysql_num_rows($sqll);
                    })
        </script>
     <?php } ?>
-    <tr align='center'>
-        <td width='30'>No.</td>
-        <td width='50'>Peminjam</td>
-        <td>Kode</td>
-        <td>Judul</td>
-        <td>Tgl. Pinjam</td>
-        <td>Jatuh Tempo</td>
-        <td>Tgl. Kembali</td>
-        <td>Petugas</td> 
-    </tr>
-    </thead>
-    <?php $i=1; while($p=mysql_fetch_array($sql)){?>                
-        <tr>
-            <td><?php echo $i; ?></td>
-            <td><a class="list" href='#' onclick='window.location="?pencarian=<?php echo $p['siswa']; ?>&where=siswa&kembali=0<?php //echo $kembaline; ?>"' title='Klik Untuk Detail'><?php echo $p['siswa']; ?></a></td>
-            <td><a class="list" onclick='window.location="?pencarian=<?php echo $p['siswa']; ?>&where=siswa&kembali=0<?php //echo $kembaline; ?>"' href="#"><?php echo $p['buku']; ?></a></td>
-            <td><a class="list" onclick='window.location="?pencarian=<?php echo $p['siswa']; ?>&where=siswa&kembali=0<?php //echo $kembaline; ?>"' href="#"><?php echo $p['judul']; ?></a></td>
-            <td><?php echo $p['tgl_pinjam']; ?></td>
-            <td><b title="Klik Tanggal Jatuh Tempo Untuk Menghitung Denda" onclick='getElementById("tempo").value="<?php echo $p['tgl_kembali']; ?>";'><?php echo $p['tgl_kembali']; ?></b></td>
-            <td><?php echo $p['kembaline'];?></td>
-            <td><?php echo $p['petugas'];?></td>
-                   
-        </tr>
-    <?php $i++; } ?>
     <?php
         if($ht=='0'){
             echo "<tr><td colspan='8' style='background-color: pink;'>Data tidak ditemukan, mohon periksa kembali pencarian</td></tr>";

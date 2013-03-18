@@ -1,14 +1,9 @@
 <?php
 session_start();
 require 'sistem/config.php';
+require 'sistem/class_buku.php';
 
 sambung();
-
-
-///Di ulang 7x (seminggu)
-//$sy=$_SESSION['sync'];
-//$s=sekarang();
-//if($sy!=$s or $sy==''){
         
     for($i=1; $i<=120; $i++){
         
@@ -34,38 +29,39 @@ sambung();
         //run
         
     
-        $kemarin=$kembali;
+        $kemarin=$waktu = date("Y-m-d", mktime(0,0,0,date("m"),date("d")+$tglK,date("Y")));
         
         //echo $kemarin."<br>";
         
-        $temSql=mysql_query("select * from pinjaman where kembali='0' AND tgl_kembali='$kemarin'");
+        $temSql=mysql_query("SELECT * FROM tbl_peminjaman WHERE kembali='0' AND tgl_tempo='$kemarin'");
         $count=0;
         if($tglK<0){
-            //echo "Sekarang tanggal $tglK <br>";
-            //echo $kembali."<br>";
+            $book=new buku();
             while($l= mysql_fetch_array($temSql)){
                 $sis=$l['siswa'];
+                $book->setKode($l['buku']);
                 //echo "------------------".$sis."<br>";
                 $buku=  mysql_real_escape_string($l['buku']);
-                $judul=  mysql_real_escape_string($l['judul']);
-                $tgl=$l['tgl_kembali'];
+                $judul= $book->getJudul();
+                $tgl=$l['tgl_tempo'];
                 //echo "------------------ $tgl <br>";
-                    $si=  mysql_query("select no_induk, nama from siswa where no_induk='$sis'");
+                    $si=  mysql_query("SELECT no_induk, nama FROM tbl_anggota WHERE no_induk='$sis'");
                     $sisw=  mysql_fetch_array($si);
                     $sis = mysql_real_escape_string($sisw['nama']);
                     $indk= $sisw['no_induk'];
                 
                     $key=md5($sis.$buku.$tgl);
                 
-                $c=  mysql_query("select * from tempo where kunci = '$key'");
+                $c=  mysql_query("SELECT * FROM tbl_telat WHERE kunci = '$key'");
                 $ce=  mysql_num_rows($c);
                     if($ce == '0'){
-                        $count++;
-                        //echo "Belum ada record<br>";    
-                        //echo "Kode $key | $sis memijam buku $buku dengan judul $judul dan jatuh tempo pada tanggal $tgl<br><br>";
-                        $insert=mysql_query("insert into tempo set induk='$indk', buku='$buku', siswa='$sis', tanggal='$tgl', judul='$judul', kunci='$key'");
+                        
+//                        echo "Belum ada record<br>";    
+//                        echo "Kode $key | $sis memijam buku $buku dengan judul $judul dan jatuh tempo pada tanggal $tgl<br><br>";
+                        $insert=mysql_query("INSERT into tbl_telat SET induk=\"$indk\", buku=\"$buku\", siswa=\"$sis\", tanggal=\"$tgl\", judul=\"$judul\", kunci=\"$key\"");
                         if(!$insert){
-                            echo "<script type='text/javascript'>alert(\"Gagal Menyimpan jatuh Tempo\");</script>";
+                            $count++;
+                            echo "<script type='text/javascript'>alert(\"Gagal Menyimpan jatuh Tempo\"); console.log(\"".mysql_error()."\");</script>";
                         }
             
                     }
@@ -75,12 +71,6 @@ sambung();
         $sync=true;
     }
     
-    //if($sync){
-      //  $_SESSION['sync']=sekarang();
-    //}
-//}else{
-//    echo "Jatuh Tempo Sudah sinkron hari ini <a><img></a>";
-//}
 if($count=="0"){
     echo "<div id='sync' style='padding: 5px;'><a href='index.php'>Data jatuh tempo sudah di sinkronisasi</a></div>";
 }else{

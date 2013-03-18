@@ -18,7 +18,7 @@ if($_GET['kelas']==''){
 $kelase=mysql_real_escape_string($_GET['kelas']);
     while($i<=$jkel){
     $jur=$kelas[$i];
-    $jum=$db->baris("select * from siswa where jurusan='$jur' && kelas like '$kelase' && count_pinjam !='0'");
+    $jum=$db->baris("SELECT * FROM tbl_anggota WHERE jurusan='$jur' && kelas like '$kelase' && count !='0'");
     //echo "$jur = $jum<br>";
     array_unshift($droti,$jum);
     array_unshift($dkel,"$kelase ".$jur);
@@ -30,10 +30,10 @@ $kelase=mysql_real_escape_string($_GET['kelas']);
 /**/
 if(array_sum($droti)=='0'){
     $droti=array('1');
-    $dkel=array('Data Kosong !!');
+    $dkel=array('Data Masih Kosong');
 }
 $roti= new PieGraph(400,400);
-$roti->title->Set("Peminjaman Berdasarkan Kelas (Kelas $kelase) | Libska");
+$roti->title->Set("Peminjaman Berdasarkan Kelas (Kelas ". strtoupper($kelase).") | Libska");
 
 $irisan=new PiePlot($droti);
 $irisan->SetTheme('sand');

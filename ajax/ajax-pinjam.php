@@ -26,6 +26,10 @@ sambung();
     $bln2=$indo[$bulan2-1];
     //**waktu kembali yg sudah fix**//
     $kembali="$hari2 $bln2 $tahun2";
+//************************************************NEW VERSION****************************//
+$tgl_kembali = date("Y-m-d", mktime(0,0,0,date("m"),date("d")+get_sistem("lama"),date("Y")));
+$tgl_pinjam =   date("Y-m-d");
+
 $buku=$_GET["buku"];
 //echo "SIswa akan meminjam buku $buku <br>";
 $siswa=new siswa();
@@ -46,15 +50,17 @@ if($_GET["mode"]=="pinjam"){
     $cBuku->setKode($dbuku);
     $count=$cBuku->getCount()+1;
     //Petugas
-    $ptgs=$_SESSION['nama'];
+    $ptgs=$_SESSION['uid'];
     //Sql Query
-    $peminjaman=mysql_query("INSERT INTO pinjaman SET siswa=\"$dsiswa\", nama=\"".$cSiswa->getNama()."\", buku=\"$dbuku\", judul=\"".$cBuku->getJudul()."\", tgl_kembali=\"$kembali\", tgl_pinjam=\"".sekarang()."\", petugas=\"$ptgs\"");     
+    $peminjaman=mysql_query("INSERT INTO tbl_peminjaman SET siswa=\"$dsiswa\", buku=\"$dbuku\", tgl_tempo=\"$tgl_kembali\", tgl_pinjam=\"$tgl_pinjam\", id_petugas=\"$ptgs\""); 
+    //Debug
+//    echo "INSERT INTO tbl_peminjaman SET siswa=\"$dsiswa\", buku=\"$dbuku\", tgl_kembali=\"2013-01-01\", tgl_pinjam=\"2013-01-01\", id_petugas=\"99\"";
     if($peminjaman){
-        $buku=mysql_query("UPDATE buku SET status=\"Kosong\", peminjam=\"$dsiswa\", count_pinjam=\"$count\" WHERE kd_buku=\"$dbuku\"");
+        $buku=mysql_query("UPDATE tbl_buku SET status=\"0\", peminjam=\"$dsiswa\", count=\"$count\" WHERE kd_buku=\"$dbuku\"");
         if($buku){
-            $qSiswa=mysql_query("UPDATE siswa SET count_pinjam=\"$meminjam\" WHERE no_induk=\"$dsiswa\"");
+            $qSiswa=mysql_query("UPDATE tbl_anggota SET count=\"$meminjam\" WHERE no_induk=\"$dsiswa\"");
             if($qSiswa){
-                catat($ptgs, "Melayani ".$cSiswa->getNama()." meminjam ".$cBuku->getJudul()." ".$count);
+                catat(get_pustakawan($ptgs), "Melayani ".$cSiswa->getNama()." meminjam ".$cBuku->getJudul());
                 echo "<script>$('#pop-pinjam').modal('hide');</script>";
                 echo "<script type='text/javascript'>window.location.reload(true);</script>";
             }else{
@@ -64,7 +70,7 @@ if($_GET["mode"]=="pinjam"){
     }
     //Stop eksekusi kode di bawah
     exit(0);
-}
+}//ENd Mode Pinjam
 /*******Simpan Peminjaman**************/
 ?>
 

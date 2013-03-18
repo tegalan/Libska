@@ -21,7 +21,7 @@ if($_SESSION['level']=='Admin'){
     $sejenis2= "$satu/$dua/$tiga";
     //echo $sejenis2;
     sambung();
-    $sql=mysql_query("select * from buku where kd_buku like '$sejenis2%' order by kd_buku DESC");
+    $sql=mysql_query("SELECT * FROM tbl_buku WHERE kd_buku LIKE '$sejenis2%' ORDER BY kd_buku DESC");
     //$all=mysql_query("select * from buku where kd_buku like '$sejenis2%' && kd_buku not like '$not%'");
     $yang_sama=mysql_num_rows($sql);
     //$all=mysql_num_rows($all);
@@ -47,7 +47,8 @@ if($_SESSION['level']=='Admin'){
         $pnrbt=mysql_real_escape_string($_POST['penerbit']);
         $hrg=$_POST['harga'];
         sambung();
-        $sql=mysql_query("insert into buku set kd_buku='$kode', judul='$jdl', pengarang='$pngrng', thn_terbit='$thn', penerbit='$pnrbt', harga='$hrg'");
+        $sql=mysql_query("INSERT INTO tbl_buku SET kd_buku='$kode', judul='$jdl', pengarang='$pngrng', thn_terbit='$thn', penerbit='$pnrbt', harga='$hrg', status='1'");
+        //echo "INSERT INTO tbl_buku SET kd_buku='$kode', judul='$jdl', pengarang='$pngrng', thn_terbit='$thn', penerbit='$pnrbt', harga='$hrg'";
         if($sql){
             catat($_SESSION['nama'],"Menambah Buku $jdl($kode)");
             echo "<script type='text/javascript'>alert('Berhasil di Simpan');</script>";
@@ -59,7 +60,7 @@ if($_SESSION['level']=='Admin'){
     //jika hapus
     if($_GET['hapus']=='1'){
         $bukune=$_GET['buku'];
-        $guak=mysql_query("delete from buku where kd_buku='$bukune'");
+        $guak=mysql_query("DELETE FROM tbl_buku WHERE kd_buku='$bukune'");
         if($guak){
             catat($_SESSION['nama'],"Menghapus Buku $bukune");
             //header('location: buku.php');
@@ -75,7 +76,7 @@ if($_SESSION['level']=='Admin'){
                 $kod=substr($by[2],0,2);
                     $bukunya=$by[0]."/".$by[1]."/".$kod;
                     //echo $bukunya;
-        $sq=mysql_query("select * from buku where kd_buku like '$bukunya%' order by kd_buku DESC");
+        $sq=mysql_query("SELECT * FROM tbl_buku WHERE kd_buku LIKE '$bukunya%' ORDER BY kd_buku DESC");
         $arr=mysql_fetch_array($sq);
         $scp=explode('/',$arr['kd_buku']);
         $kd=substr($scp[2],0,2);
@@ -115,7 +116,7 @@ if($_SESSION['level']=='Admin'){
     <tr>
         <td>Harga</td><td> : </td><td><input class='input-small' type='text' name='harga' size='10' value="<?php echo $arr['harga']; ?>"></td>
     </tr>
-    <tr><td colspan='3'><input type='submit' value='Tambah' name='tambah'></td></tr>
+    <tr><td colspan='3'><input class="btn btn-info" type='submit' value='Tambah' name='tambah'></td></tr>
 </table>
 </form>
 </fieldset>

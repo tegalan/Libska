@@ -110,6 +110,9 @@ function restore($filename){
 				
 			}
 		}
+                if(file_exists($letak)){
+                    unlink($letak);
+                }
 		echo "<script type=\"text/javascript\">alert('Hasil Restore Berhasil: $berhasil Gagal $gagal');</script>";
 } 
 
