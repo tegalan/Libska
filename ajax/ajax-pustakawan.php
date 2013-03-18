@@ -81,7 +81,7 @@ if($_GET['mode']=='list'){
         </tr>
     </table>
    </form>
-   <?
+   <?php
 }elseif($_GET['mode']=='tambah'){
     //mode tambah
 }else{
