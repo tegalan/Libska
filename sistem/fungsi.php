@@ -4,13 +4,14 @@ File: fungsi.php
 Fungsi: Library Fungsi
 Auth: ShowCheap
 */
+error_reporting('0');
 function catat($us,$text){
     $now=date("Y-m-d H:i:s");
     $peng=mysql_real_escape_string($us);
     $aksi=mysql_real_escape_string($text);
         $insert=mysql_query("INSERT INTO log SET user = '$peng', aksi = '$aksi', tgl = '$now'");
         if($insert){
-            
+
         }else{
             echo "<script type='text/javascript'>alert('Pencatatan Log gagal');</script>";
         }
@@ -19,8 +20,8 @@ function catat($us,$text){
 class db{
     private $h,$u,$p,$d,$query,$baris;
     public $hasil;
-    
-    public function setDB($ho, $us, $pw, $db){    
+
+    public function setDB($ho, $us, $pw, $db){
         $this->h=$ho;
         $this->u=$us;
         $this->p=$pw;
@@ -32,7 +33,7 @@ class db{
     }
     public function sql($query){
         //$this::sambungDB();
-        
+
         $this->query=mysql_query($query);
     }
     public function hasil(){
@@ -84,7 +85,7 @@ function get_kaki(){
 }
 
 function cek_user($user='Admin', $or='Pustakawan', $redir='masuk.php'){
-    $sesi=$_SESSION['level'];    
+    $sesi=$_SESSION['level'];
     if(!($sesi==$user || $sesi==$or)){
         header('location: '.$redir.'');
     }
@@ -103,7 +104,7 @@ function tanggal($tgl="10 Mei 1993"){
     $b=$val['1'];
     $th=$t=$val['2'];
     $indo=array('Januari', 'Pebruari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'Nopember', 'Desember');
-    for($i=0; $i<=12; $i++){    
+    for($i=0; $i<=12; $i++){
         if($b==$indo[$i]){
         $b=$i+1;
         }
@@ -115,7 +116,7 @@ function tanggal($tgl="10 Mei 1993"){
     }else{
         return "0000-00-00";
     }
-    
+
 }
 
 function hitung_hari($h='1', $b='1', $t='2012', $h2='1', $b2='1', $t2='2012'){
@@ -192,7 +193,7 @@ function denda($tempo, $sekarang){
             $denda='30000';
             break;
     }
-    
+
     return $denda;
 
 }
@@ -201,7 +202,7 @@ function denda($tempo, $sekarang){
 class exel{
     private $h,$u,$p,$t;
     public $d, $k, $db, $sq, $nama="Libska";
-    
+
     /*public function __construct($host,$user,$pwd,$db){
     $this->h=$host;
     $this->u=$user;
@@ -221,17 +222,17 @@ class exel{
         //$sql = "SELECT * FROM biodata_siswa";
         $rec = mysql_query($sql) or die (mysql_error());
         $num_fields = mysql_num_fields($rec);
-   
+
         for($i = 0; $i < $num_fields; $i++ )
         {
             $header .= mysql_field_name($rec,$i)."\t";
         }
-       
+
         while($row = mysql_fetch_row($rec))
         {
             $line = '';
             foreach($row as $value)
-            {                                           
+            {
                 if((!isset($value)) || ($value == ""))
                 {
                     $value = "\t";
@@ -245,12 +246,12 @@ class exel{
             }
             $data .= trim( $line ) . "\n";
         }
-       
+
         $data = str_replace("\r" , "" , $data);
-       
+
         if ($data == "")
         {
-            $data = "\n Datane Ora Enek!\n";                       
+            $data = "\n Datane Ora Enek!\n";
         }
         catat($_SESSION['nama'], "Mengunduh File >>> $nama_file");
         header("Content-type: application/octet-stream");
@@ -269,7 +270,7 @@ function getVersion(){
 function get_sistem($opt){
     $sql=mysql_query("SELECT * FROM tbl_config WHERE param='$opt'");
     $q=@mysql_fetch_array($sql);
-    
+
     return $q['value'];
 }
 
@@ -283,19 +284,19 @@ function set_sistem($inpt, $val){
 function get_nama($id){
     $s=mysql_query("SELECT * FROM tbl_anggota WHERE no_induk=\"$id\"");
     $r=mysql_fetch_array($s);
-    
+
     return $r["nama"];
 }
 function get_pustakawan($id){
     $s=  mysql_query("SELECT * FROM tbl_pustakawan WHERE id=\"$id\"");
     $r= mysql_fetch_array($s);
-    
+
     return $r['nama'];
 }
 function id_pustakawan($nama){
     $s=  mysql_query("SELECT id FROM anggota WHERE nama=\"$nama\"");
     $r= mysql_fetch_array($s);
-    
+
     return $r['id'];
 }
 ?>
