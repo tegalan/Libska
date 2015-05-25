@@ -20,7 +20,7 @@ sambung();
     //**tgl kembali**//
     $waktu = date("d-n-Y", mktime(0,0,0,date("m"),date("d")+get_sistem("lama"),date("Y")));
     $x=explode('-', $waktu);
-    $hari2=$x['0']; 
+    $hari2=$x['0'];
     $bulan2=$x['1'];
     $tahun2=date('Y');
     $bln2=$indo[$bulan2-1];
@@ -52,7 +52,7 @@ if($_GET["mode"]=="pinjam"){
     //Petugas
     $ptgs=$_SESSION['uid'];
     //Sql Query
-    $peminjaman=mysql_query("INSERT INTO tbl_peminjaman SET siswa=\"$dsiswa\", buku=\"$dbuku\", tgl_tempo=\"$tgl_kembali\", tgl_pinjam=\"$tgl_pinjam\", id_petugas=\"$ptgs\""); 
+    $peminjaman=mysql_query("INSERT INTO tbl_peminjaman SET siswa=\"$dsiswa\", buku=\"$dbuku\", tgl_tempo=\"$tgl_kembali\", tgl_pinjam=\"$tgl_pinjam\", id_petugas=\"$ptgs\"");
     //Debug
 //    echo "INSERT INTO tbl_peminjaman SET siswa=\"$dsiswa\", buku=\"$dbuku\", tgl_kembali=\"2013-01-01\", tgl_pinjam=\"2013-01-01\", id_petugas=\"99\"";
     if($peminjaman){
@@ -95,7 +95,7 @@ if($_GET["mode"]=="pinjam"){
 <?php
 
 if($_POST["siswa"] or $_GET["siswa"]){
-    
+
     $siswa->setInduk($_POST["siswa"]);
 ?>
 <?php  if($siswa->cekAda()){ ?>
@@ -106,7 +106,7 @@ if($_POST["siswa"] or $_GET["siswa"]){
     </tr>
     <tr>
         <td>Kelas /  Jurusan</td><td>:</td><td><?php echo $siswa->getKelas()." ".$siswa->getJurusan(); ?></td>
-    </tr> 
+    </tr>
 </table>
 <?php
 $siswa_ada=true;
@@ -150,7 +150,7 @@ if($siswa_ada){
     })
 </script>
 <a href="#" class="btn btn-primary" id="tmbl-pinjam">Pinjam</a> <a class="btn" href="#" data-dismiss="modal" aria-hidden="true">Batal</a>
-<?
+<?php
 }
 ?>
 <?php }else{ ?>
@@ -158,9 +158,9 @@ if($siswa_ada){
     $("#pop-pinjam").on('shown',function(){
         $('input[name="siswa"]').focus();
     })
-    
+
 </script>
 <?php
-}; //end if $_POST["siswa"] 
+}; //end if $_POST["siswa"]
 ?>
 </div><!--div content-->
